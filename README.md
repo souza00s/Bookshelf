@@ -159,4 +159,4 @@ Contribuições são bem-vindas! Siga os passos:
 
 ---
 
-Desenvolvido por [@souza00s](https://github.com/souza00s) & [@gmorais](https://github.com/souza00s)
+Desenvolvido por [@souza00s](https://github.com/souza00s) & [@Bagreel](https://github.com/Bagreel)
