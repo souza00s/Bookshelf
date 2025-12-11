@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: bookshelf-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bookshelf
+      MYSQL_USER: bookshelf
+      MYSQL_PASSWORD: bookshelf
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Opcional: API em container (só use se quiser rodar a API via Docker)
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: bookshelf-api
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/bookshelf
+      SPRING_DATASOURCE_USERNAME: bookshelf
+      SPRING_DATASOURCE_PASSWORD: bookshelf
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: dev-secret
+      SERVER_PORT: 8080
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql_data:
