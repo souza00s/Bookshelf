@@ -1,0 +1,45 @@
+<ion-content>
+  <div class="form-container">
+
+    <div class="form-header">
+      <a routerLink="/" class="logo-link">
+        <ion-icon name="book" color="primary"></ion-icon>
+        <span>Bookshelf</span>
+      </a>
+      <h2>Entrar na sua conta</h2>
+      <p>Acesse para gerenciar seus livros e doações</p>
+    </div>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+  
+  <div class="input-group">
+    <ion-label>E-mail</ion-label>
+    <ion-item class="custom-input">
+      <ion-input type="email" formControlName="email"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="input-group">
+    <ion-label>Senha</ion-label>
+    <ion-item class="custom-input">
+      <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password"></ion-input>
+      <ion-button fill="clear" slot="end" (click)="togglePasswordVisibility()">
+        <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </div>
+  
+      <div class="options">
+        <a (click)="goToPasswordRecovery()">Esqueceu a senha?</a>
+      </div>
+  <ion-button type="submit" expand="block" class="ion-margin-top" [disabled]="loginForm.invalid || isLoading">
+    <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+    <span *ngIf="!isLoading">Entrar</span>
+  </ion-button>
+
+      <div class="footer-link">
+        <p>Não tem uma conta? <a routerLink="/register">Cadastre-se aqui</a></p>
+      </div>
+    </form>
+  </div>
+</ion-content>

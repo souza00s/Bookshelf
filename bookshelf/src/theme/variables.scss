@@ -1,0 +1,20 @@
+// For information on how to create your own theme, please see:
+// http://ionicframework.com/docs/theming/
+/* src/theme/variables.scss */
+
+:root {
+  --ion-color-primary: #ff9900;
+--ion-color-primary-rgb: 255, 153, 0;
+--ion-color-primary-contrast: #ffffff;
+--ion-color-primary-contrast-rgb: 255, 255, 255;
+--ion-color-primary-shade: #e08700;
+--ion-color-primary-tint: #ffa31a;
+
+  /* ... o resto das cores ... */
+
+  --ion-background-color: #ffffff;
+}
+
+ion-button {
+  text-transform: none; // Impede que o texto do botão fique em maiúsculas
+}

@@ -1,0 +1,34 @@
+<ion-content [fullscreen]="true" class="notifications-content">
+  <div class="notifications-container ion-padding">
+    <h1 class="page-title">Notificações</h1>
+    <div class="actions-bar" *ngIf="(notif.notifications$ | async)?.length">
+      <ion-button size="small" fill="clear" (click)="notif.markAllRead()">Marcar todas como lidas</ion-button>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let n of (notif.notifications$ | async)">
+        <ion-label>
+          <div class="row">
+            <h3 [class.unread]="!n.read">{{ n.message }}</h3>
+            <span class="date">{{ n.createdAt | date:'short' }}</span>
+          </div>
+          <p *ngIf="n.payload?.bookTitle">Livro: {{ n.payload?.bookTitle }}</p>
+          <p *ngIf="n.payload?.amount">Valor: R$ {{ n.payload?.amount | number:'1.2-2' }}</p>
+          <p *ngIf="n.payload?.buyerName">Comprador: {{ n.payload?.buyerName }}</p>
+          <p *ngIf="n.payload?.sellerName">Vendedor: {{ n.payload?.sellerName }}</p>
+          <!-- Botão só aparece para o vendedor na notificação de pagamento -->
+          <div *ngIf="n.type === 'PAYMENT_CONFIRMED' && !n.read && n.payload?.sellerId === userId && !isShippingDone(n)" class="actions">
+            <ion-button size="small" color="success" fill="solid" [disabled]="isSending(n)" (click)="confirmShipping(n)">Confirmar envio</ion-button>
+          </div>
+        </ion-label>
+        <ion-buttons slot="end" class="more-actions">
+          <ion-button fill="clear" color="medium" (click)="notif.deleteNotification(n.id)" aria-label="Excluir">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="onLoadMore($event)" *ngIf="notif.canLoadMore()">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Carregando..."></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </div>
+</ion-content>

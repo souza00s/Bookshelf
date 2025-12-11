@@ -1,0 +1,88 @@
+<ion-content>
+  <div *ngIf="isLoading" class="loading-container">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+  </div>
+
+  <div class="detail-container" *ngIf="!isLoading && !error && (book$ | async) as book">
+    <div class="back-button-wrapper">
+      <ion-button fill="clear" (click)="location.back()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+        Voltar para explorar
+      </ion-button>
+    </div>
+
+    <div class="book-card">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12" size-md="4">
+            <div class="book-cover">
+              <img [src]="book.coverUrl" [alt]="book.title">
+            </div>
+          </ion-col>
+          <ion-col size="12" size-md="8" class="book-info">
+            <h1>{{ book.title }}</h1>
+            <p class="author">por <strong>{{ book.author }}</strong></p>
+
+            <div class="chips-container">
+              <ion-chip [color]="getConditionColor(book.condition)">
+                <ion-label>{{ formatCondition(book.condition) }}</ion-label>
+              </ion-chip>
+              <ion-chip outline="true" *ngIf="book.owner">
+                <ion-icon name="person-outline"></ion-icon>
+                <ion-label>Doado por: {{ book.owner.name }}</ion-label>
+              </ion-chip>
+            </div>
+
+            <div class="delivery-options">
+              <h3>Opções de entrega:</h3>
+              <div class="chips-container">
+                <ion-chip *ngIf="book.deliveryLocalPickup">
+                  <ion-label>Retirada Local</ion-label>
+                </ion-chip>
+                <ion-chip *ngIf="book.deliveryShipping">
+                  <ion-label>Envio</ion-label>
+                </ion-chip>
+              </div>
+            </div>
+
+            <div class="description">
+  <h2>Sobre o livro</h2>
+  <p>{{ book.description }}</p>
+</div>
+
+<div class="action-buttons" *ngIf="!isOwner && !showDeliveryOptions">
+  <ion-button (click)="handleRequestBook(book)">
+    <ion-icon name="book-outline" slot="start"></ion-icon>
+    Solicitar este livro
+  </ion-button>
+</div>
+
+<div class="action-buttons delivery-choice" *ngIf="!isOwner && showDeliveryOptions">
+  <h3>Como você deseja receber este livro?</h3>
+  <div class="buttons-wrapper">
+    <ion-button fill="outline" (click)="handleDeliveryOption('pickup', book)">
+      <ion-icon name="storefront-outline" slot="start"></ion-icon>
+      Retirada Local
+    </ion-button>
+    <ion-button fill="outline" (click)="handleDeliveryOption('shipping', book)">
+      <ion-icon name="bus-outline" slot="start"></ion-icon>
+      Envio
+    </ion-button>
+  </div>
+</div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </div>
+
+  <div *ngIf="error && !isLoading" class="not-found-container">
+    <ion-icon name="alert-circle-outline"></ion-icon>
+    <h1>Livro não encontrado</h1>
+    <p>O livro que você está procurando não existe ou não está mais disponível.</p>
+    <ion-button fill="clear" routerLink="/browse">
+      <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+      Voltar para explorar
+    </ion-button>
+  </div>
+</ion-content>

@@ -1,0 +1,114 @@
+ion-content {
+  --background: #f9fafb;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  padding: 16px;
+
+  // Estilo do card branco central
+  > div, > form {
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  > form {
+    padding-top: 16px;
+    box-shadow: none;
+    border-radius: 8px;
+  }
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: none !important;
+
+  .logo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    margin-bottom: 24px;
+
+    span {
+      color: #000;
+    }
+
+    ion-icon {
+      font-size: 2rem;
+    }
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000; // gray-800
+    margin-top: 0;
+  }
+
+  p {
+    color: #000; // gray-600
+  }
+}
+
+.input-group {
+  width: 100%;
+  margin-bottom: 16px;
+
+  ion-label {
+    display: block;
+    color: #000; // gray-700
+    font-size: 0.9em;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+}
+
+.custom-input {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  --background: #ffffff;
+  margin-bottom: 0;
+
+  ion-input {
+    padding-left: 12px !important;
+    --color: #000;
+  }
+}
+
+a {
+  color: var(--ion-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.footer-link {
+  margin-top: 24px;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+
+  p {
+    color: #000;
+    font-size: 0.9em;
+  }
+}

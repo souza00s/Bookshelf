@@ -1,0 +1,124 @@
+ion-content {
+--background: #f9fafbfd;
+--padding-top: 24px; // Adiciona margem no topo
+--padding-bottom: 24px; // Adiciona margem na parte inferior
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 16px;
+
+  // Estilo do card branco central
+  > div, > form {
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  > form {
+  padding-top: 16px;
+  box-shadow: none; // O form não precisa de sombra se estiver junto do header
+  border-radius: 8px; // Mantém o border-radius consistente
+  }
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: none !important;
+
+  .logo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color:  #000;
+    text-decoration: none;
+    margin-bottom: 24px;
+
+    ion-icon {
+      font-size: 2rem;
+    }
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000; // gray-800
+    margin-top: 0;
+  }
+
+  p {
+    
+    color: #000; // gray-600
+  }
+}
+
+// Estilo customizado para os inputs
+.input-group {
+  width: 100%;
+  margin-bottom: 16px;
+
+  ion-label {
+    display: block; // Garante que o rótulo ocupe sua própria linha
+    color: #000; // Cor do gray-700, um preto suave
+    font-size: 0.9em;
+    font-weight: 500;
+    margin-bottom: 4px; // Espaço entre o rótulo e o campo
+  }
+}
+
+.custom-input {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  --background: #ffffff;
+  margin-bottom: 0;
+
+  ion-input {
+    padding-left: 12px !important;
+    // Adicione a linha abaixo para forçar a cor do texto
+    --color: #1f2937; // Cor do gray-800, um preto forte
+  }
+}
+
+.options {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.9em;
+  margin-bottom: 16px;
+}
+
+a {
+  color: var(--ion-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.footer-link {
+  margin-top: 24px;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+
+  p {
+    color: #000; // Um cinza escuro mais suave
+    font-size: 0.9em;
+  }
+}
+

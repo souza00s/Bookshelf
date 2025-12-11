@@ -1,0 +1,179 @@
+// Configurações gerais
+section {
+  padding: 64px 24px;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1f2937;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 48px;
+}
+
+// 1. Secção Hero (Topo)
+.hero-section {
+  background: linear-gradient(to right, #ffc107, #f97316);
+  color: white;
+  // MUDANÇA 3: Aumenta a altura da secção
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  padding-top: 120px;
+  padding-bottom: 100px;
+
+  .hero-content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 48px;
+    align-items: center;
+    @media (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .hero-text {
+    text-align: center;
+    @media (min-width: 768px) { text-align: left; }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: bold;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      // MUDANÇA 2: Remove o espaçamento extra entre as letras
+      letter-spacing: normal;
+    }
+    p {
+      margin-bottom: 32px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      font-weight: 600;
+      @media (min-width: 768px) { margin-left: 0; }
+    }
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    @media (min-width: 768px) { justify-content: flex-start; }
+    ion-button {
+      font-weight: 600;
+      height: 44px;
+    }
+  }
+
+  .find-books-btn {
+    --background: #ffffff;
+    --color: #1f2937;
+    --box-shadow: none;
+  }
+  .donate-books-btn {
+    --border-color: #ffffff;
+    --color: #ffffff;
+    --box-shadow: none;
+  }
+
+  .hero-image {
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+    .image-bg {
+      position: absolute;
+      top: 16px;
+      left: -16px;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      border-radius: 8px;
+    }
+    img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+  }
+}
+
+// 2. Secção Como Funciona
+.how-it-works-section {
+  background: #ffffff;
+  .steps-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    @media (min-width: 768px) { grid-template-columns: repeat(3, 1fr); }
+  }
+  .step {
+    text-align: center;
+  }
+  .icon-wrapper {
+    background: #fef3c7;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    ion-icon {
+      font-size: 2rem;
+      color: var(--ion-color-primary);
+    }
+  }
+  h3 { font-size: 1.25rem; font-weight: 600; color: #1f2937; }
+  p { color: #6b7280; }
+}
+
+// 3. Secção de Livros em Destaque
+.featured-books-section {
+  background: #f9fafb;
+  .section-header {
+    max-width: 1200px;
+    margin: 0 auto 32px;
+    display: flex;
+    justify-content: space-between; // <<-- Adicione esta linha
+    align-items: center; // Alinha os itens verticalmente
+
+    // Garante que o H2 não tenha margens desnecessárias e esteja alinhado à esquerda
+    h2.section-title {
+      text-align: left;
+      margin: 0;
+    }
+  }
+  .books-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px;
+  }
+}
+
+// 4. Secção CTA (Call to Action)
+.cta-section {
+  background-color: var(--ion-color-primary);
+  text-align: center;
+  h2, p {
+    color: white;
+  }
+  h2 { font-size: 2rem; font-weight: bold; margin-bottom: 16px; }
+  p { max-width: 600px; margin: 0 auto 32px; }
+  .donate-now-btn {
+    --background: #ffffff;
+    --color: #1f2937;
+    --box-shadow: none;
+    height: 44px;
+    font-weight: 600;
+  }
+}

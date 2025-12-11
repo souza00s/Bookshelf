@@ -1,0 +1,52 @@
+:host { --gap: 10px; }
+.shipping-page { padding-top: 12px; }
+/* Align back link with page title and content start */
+.back-wrapper { padding: 0 24px; margin: 10px 0; display: flex; justify-content: flex-start; }
+.back-link { display:inline-flex; align-items:center; gap:8px; color:#111827; text-decoration:none; margin: 0 0 12px 0; background:#fff; padding:6px 10px; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,0.05); }
+.back-link ion-icon { font-size:18px; }
+
+.page-grid { row-gap: var(--gap); }
+.main-card, .summary-card { border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+
+.book-info { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.book-info .cover { width: 64px; height: 64px; border-radius: 8px; overflow: hidden; background: #f3f4f6; }
+.book-info .cover img { width:100%; height:100%; object-fit:cover; }
+.book-info .meta h2 { margin: 0; font-size: 18px; color:#1f2937; }
+.book-info .meta .author { color: #6b7280; margin: 2px 0 0 0; }
+.book-info .meta .donor { color: #6b7280; font-size: 13px; margin: 2px 0 0 0; }
+
+.info-banner { display:flex; gap:12px; background:#fff7ed; border:1px solid #fed7aa; color:#b45309; border-radius:8px; padding:12px; align-items:flex-start; margin-bottom: 16px; }
+.info-banner ion-icon { color:#d97706; font-size:18px; }
+.info-banner .title { font-weight:600; margin-bottom:4px; }
+.info-banner .desc { color:#6b7280; font-size:14px; }
+
+.address-block { margin-bottom: 12px; }
+.address-block .title { font-weight:600; color:#1f2937; margin-bottom: 6px; }
+.address-block .address { display:flex; align-items:center; gap:8px; color:#4b5563; }
+.address-block ion-icon { color:#6b7280; }
+.address-block .address-edit { display:flex; align-items:flex-end; gap:8px; margin-top:8px; }
+.address-block .cep-input { flex:1; border:1px solid #e5e7eb; border-radius:8px; }
+.address-block .custom-input { --border-color: transparent; --background: transparent; --padding-start: 0; --inner-padding-end: 0; }
+.address-block .custom-input ion-input, .address-block .custom-input ion-select { width:100%; background:#f9fafb; border:1px solid #d1d5db; border-radius:6px; --padding-start:12px; min-height:44px; --color:#1f2937 !important; }
+.no-padding { --ion-grid-padding: 0; }
+
+.dims-grid { display:grid; grid-template-columns: repeat(4,1fr); gap:8px; align-items:end; margin-top: 12px; }
+.dims-grid .quote-btn { grid-column: span 4; }
+
+.options ion-item { --background: #fff; --inner-padding-end: 12px; border:1px solid #e5e7eb; border-radius:8px; margin-top:8px; }
+.options ion-note { font-weight:600; color:#111827; }
+
+.payment { margin-top: 16px; }
+.payment .title { font-weight:600; color:#1f2937; margin-bottom: 8px; }
+.payment .pix-line { display:flex; align-items:center; gap:12px; border:1px solid #e5e7eb; border-radius:8px; padding:12px; }
+.payment .pix-line ion-icon { color:#6b7280; font-size:20px; }
+.payment .pix-info .label { color:#6b7280; font-size:12px; }
+.payment .pix-info .key { font-weight:600; color:#111827; }
+.payment .pix-info.muted { color:#6b7280; }
+
+.summary-card.sticky { position: sticky; top: 80px; }
+.summary-card .total-row .total { font-weight:700; }
+.summary-card .legal-note { color:#6b7280; font-size:12px; text-align:center; margin-top:8px; }
+.loading-block { padding-top:32px; }
+.error-state { display:flex; flex-direction:column; align-items:center; gap:12px; padding:48px 16px; color:#b91c1c; }
+.error-state ion-icon { font-size:42px; }

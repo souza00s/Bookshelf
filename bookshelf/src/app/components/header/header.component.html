@@ -1,0 +1,42 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="toolbar-content">
+      <a routerLink="/" class="logo-link">
+        <ion-icon name="book" color="primary"></ion-icon>
+        <span>Bookshelf</span>
+      </a>
+
+      <nav class="nav-links">
+        <a routerLink="/browse" routerLinkActive="active-link">Encontrar Livros</a>
+        <a routerLink="/donate" routerLinkActive="active-link">Doar Livro</a>
+      </nav>
+
+      <div class="user-actions" *ngIf="currentUser$ | async as user; else guestActions">
+        <a routerLink="/messages" class="action-button notif">
+          <ion-icon name="chatbubbles-outline"></ion-icon>
+          <span *ngIf="msg.unreadMessagesCount() > 0" class="badge">{{ msg.unreadMessagesCount() }}</span>
+        </a>
+        <a routerLink="/notifications" class="action-button notif">
+          <ion-icon name="notifications-outline"></ion-icon>
+          <span *ngIf="notif.unreadCount() > 0" class="badge">{{ notif.unreadCount() }}</span>
+        </a>
+        <a routerLink="/profile" class="action-button">
+          <ion-icon name="person-outline"></ion-icon>
+        </a>
+        <button (click)="onLogout()" class="action-button logout-button">
+          <ion-icon name="log-out-outline"></ion-icon>
+        </button>
+      </div>
+
+      <ng-template #guestActions>
+        <div class="user-actions">
+          <a routerLink="/login" class="login-link">
+            <ion-icon name="log-in-outline"></ion-icon>
+            <span>Login/Cadastro</span>
+          </a>
+        </div>
+      </ng-template>
+
+    </div>
+  </ion-toolbar>
+</ion-header>

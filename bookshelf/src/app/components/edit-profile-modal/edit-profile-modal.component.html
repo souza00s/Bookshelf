@@ -1,0 +1,175 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Editar Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="editForm" (ngSubmit)="onSave()">
+    
+  <div class="input-group" *ngIf="section === 'basic'">
+      <ion-label>Foto de Perfil</ion-label>
+      <div class="image-upload-box" (click)="triggerImageInputClick()">
+        <ng-container *ngIf="!imagePreview">
+          <ion-icon name="camera-outline"></ion-icon>
+          <p>Clique para selecionar uma imagem</p>
+        </ng-container>
+        <div *ngIf="imagePreview" class="image-preview-container">
+          <img [src]="imagePreview" alt="Pré-visualização do avatar">
+          <ion-button class="remove-image-btn" fill="clear" color="danger" (click)="removeImage($event)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+      <input id="avatarImageInput" type="file" accept="image/*" (change)="handleImageChange($event)" hidden>
+    </div>
+
+  <div class="input-group" *ngIf="section === 'basic'">
+      <ion-label>Nome</ion-label>
+      <ion-item class="custom-input">
+        <ion-input type="text" formControlName="name"></ion-input>
+      </ion-item>
+    </div>
+
+  <div class="input-group" *ngIf="section === 'basic'">
+      <ion-label>Descrição</ion-label>
+      <ion-item class="custom-input textarea-input">
+        <ion-textarea formControlName="description"
+                      placeholder="Fale um pouco sobre você..."
+                      [autoGrow]="true"
+                      [maxlength]="maxDescriptionLength">
+        </ion-textarea>
+      </ion-item>
+      <p class="helper-text char-counter">
+        {{ editForm.get('description')?.value.length || 0 }} / {{ maxDescriptionLength }}
+      </p>
+    </div>
+
+    <div class="input-group" *ngIf="section === 'genres'">
+      <ion-label>Géneros Favoritos</ion-label>
+      <div class="genres-container">
+        <ion-chip *ngFor="let genre of genreOptions"
+                  [outline]="!isGenreSelected(genre)"
+                  (click)="toggleGenre(genre)"
+                  [color]="isGenreSelected(genre) ? 'primary' : 'medium'">
+          <ion-label>{{ genre }}</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+
+  <div class="input-group" *ngIf="section === 'pix'">
+      <ion-label>Chaves PIX</ion-label>
+      <div class="pix-keys-list" *ngIf="pixKeys.length > 0; else noPixKeys">
+        <ion-item *ngFor="let k of pixKeys; let i = index" lines="none" class="pix-key-row">
+          <ion-label>{{ k }}</ion-label>
+          <ion-button fill="clear" color="danger" (click)="removePixKey(i)" size="small">
+            <ion-icon slot="icon-only" name="close-circle"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </div>
+      <ng-template #noPixKeys>
+        <p class="placeholder">Nenhuma chave adicionada.</p>
+      </ng-template>
+      <ion-item class="custom-input add-pix" lines="none">
+        <ion-input [(ngModel)]="newPixKeyInput" placeholder="E-mail, CPF/CNPJ, telefone..." [ngModelOptions]="{standalone:true}"></ion-input>
+  <ion-button size="small" (click)="addPixKey()" [disabled]="!newPixKeyInput.trim()">Adicionar</ion-button>
+      </ion-item>
+      <p class="helper-text">Adicione uma ou mais chaves. Apenas quem paga verá.</p>
+    </div>
+
+  <div class="input-group" *ngIf="section === 'addresses'">
+      <ion-label>Endereços</ion-label>
+      <div class="addresses-list" *ngIf="addresses.length > 0; else noAddresses">
+        <ion-card class="address-card" *ngFor="let a of addresses; let i = index">
+          <ion-card-content>
+            <div class="address-header">
+              <strong>{{ a.label || 'Endereço' }}</strong>
+              <ion-button fill="clear" color="danger" size="small" (click)="removeAddress(i)">
+                <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+              </ion-button>
+            </div>
+            <div class="address-lines">
+              <div class="line">CEP: {{ a.cep }}</div>
+              <div class="line">{{ a.street || '' }} {{ a.number || '' }} <span *ngIf="a.complement">- {{ a.complement }}</span></div>
+              <div class="line">{{ a.neighborhood || '' }}</div>
+              <div class="line">{{ a.city || '' }} - {{ a.state || '' }} {{ a.country || '' }}</div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+      <ng-template #noAddresses>
+        <p class="placeholder">Nenhum endereço adicionado.</p>
+      </ng-template>
+
+      <div class="address-form">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="12" size-md="4">
+              <ion-item class="custom-input" lines="none">
+                <ion-input [(ngModel)]="newAddress.label" [ngModelOptions]="{standalone:true}" placeholder="Apelido (Casa, Trabalho)"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12" size-md="4">
+              <ion-item class="custom-input" lines="none">
+                <ion-input [(ngModel)]="newAddress.cep" (ionInput)="onCepInput()" (ionBlur)="onCepBlur()" [ngModelOptions]="{standalone:true}" placeholder="CEP *"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12" size-md="4">
+              <ion-item class="custom-input" lines="none">
+                <ion-input [(ngModel)]="newAddress.street" [ngModelOptions]="{standalone:true}" placeholder="Rua"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6" size-md="3">
+              <ion-item class="custom-input" lines="none">
+                <ion-input [(ngModel)]="newAddress.number" [ngModelOptions]="{standalone:true}" placeholder="Número"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="6" size-md="3">
+              <ion-item class="custom-input" lines="none">
+                <ion-input [(ngModel)]="newAddress.complement" [ngModelOptions]="{standalone:true}" placeholder="Complemento"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12" size-md="6">
+              <ion-item class="custom-input" lines="none">
+                <ion-input [(ngModel)]="newAddress.neighborhood" [ngModelOptions]="{standalone:true}" placeholder="Bairro"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="6" size-md="4">
+              <ion-item class="custom-input" lines="none">
+                <ion-input [(ngModel)]="newAddress.city" [ngModelOptions]="{standalone:true}" placeholder="Cidade"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="3" size-md="2">
+              <ion-item class="custom-input" lines="none">
+                <ion-input [(ngModel)]="newAddress.state" [ngModelOptions]="{standalone:true}" placeholder="UF"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="3" size-md="2">
+              <ion-item class="custom-input" lines="none">
+                <ion-input [(ngModel)]="newAddress.country" [ngModelOptions]="{standalone:true}" placeholder="País"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col size="12" size-md="4" class="add-address-btn-col">
+              <ion-button expand="block" (click)="addAddress()" [disabled]="!(newAddress.cep && newAddress.cep.trim())">Adicionar Endereço</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+      <p class="helper-text">Cadastre pelo menos um endereço com CEP para poder doar livros.</p>
+    </div>
+    
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="action-buttons-container">
+      <ion-button fill="outline" color="medium" (click)="onCancel()">Cancelar</ion-button>
+      <ion-button (click)="onSave()" [disabled]="editForm.invalid">Salvar Alterações</ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

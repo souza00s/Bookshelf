@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="ion-text-center">Editar Livro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="editForm">
+    <div class="input-group">
+      <ion-label>Foto da Capa</ion-label>
+      <div class="image-upload-box">
+        <ng-container *ngIf="!imagePreview">
+          <ion-icon name="image-outline"></ion-icon>
+          <p>JPG, PNG ou GIF (máx. 5MB)</p>
+          <ion-button size="small" fill="outline" (click)="triggerImageInputClick()">
+            Selecionar Imagem
+          </ion-button>
+        </ng-container>
+        <div *ngIf="imagePreview" class="image-preview-container">
+          <img [src]="imagePreview" alt="Pré-visualização da capa">
+          <ion-button class="remove-image-btn" fill="clear" color="danger" (click)="removeImage($event)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+      <input id="coverImageInput" type="file" accept="image/*" (change)="handleImageChange($event)" hidden>
+    </div>
+
+    <div class="input-group">
+      <ion-label>Título *</ion-label>
+      <ion-item class="custom-input">
+        <ion-input formControlName="title"></ion-input>
+      </ion-item>
+    </div>
+    <div class="input-group">
+      <ion-label>Autor *</ion-label>
+      <ion-item class="custom-input">
+        <ion-input formControlName="author"></ion-input>
+      </ion-item>
+    </div>
+    <div class="input-group">
+      <ion-label>Estado do Livro *</ion-label>
+      <ion-item class="custom-input">
+        <ion-select formControlName="condition" interface="popover" placeholder="Selecione o estado">
+          <ion-select-option value="novo">Novo</ion-select-option>
+          <ion-select-option value="excelente">Excelente</ion-select-option>
+          <ion-select-option value="bom">Bom</ion-select-option>
+          <ion-select-option value="usado">Usado</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+    <div class="input-group">
+      <ion-label>Categoria (Género)</ion-label>
+      <ion-item class="custom-input">
+        <ion-select formControlName="genre" interface="popover" placeholder="Selecione uma categoria">
+          <ion-select-option value="romance">Romance</ion-select-option>
+          <ion-select-option value="ficcao">Ficção</ion-select-option>
+          <ion-select-option value="infantil">Infantil</ion-select-option>
+          <ion-select-option value="biografia">Biografia</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+    <div class="input-group">
+      <ion-label>Descrição do Livro</ion-label>
+      <ion-item class="custom-input textarea-input">
+        <ion-textarea formControlName="description" [autoGrow]="true" placeholder="Detalhes sobre o livro, edição, etc."></ion-textarea>
+      </ion-item>
+    </div>
+    <div class="input-group">
+    <ion-label>Opções de Entrega *</ion-label>
+    <div class="checkbox-group">
+      <ion-item lines="none" class="delivery-toggle" [class.active]="editForm.get('deliveryLocalPickup')?.value" (click)="editForm.get('deliveryLocalPickup')?.setValue(!editForm.get('deliveryLocalPickup')?.value)">
+        <ion-checkbox class="pill" formControlName="deliveryLocalPickup" labelPlacement="end">Retirada Local</ion-checkbox>
+      </ion-item>
+      <ion-item lines="none" class="delivery-toggle" [class.active]="editForm.get('deliveryShipping')?.value" (click)="editForm.get('deliveryShipping')?.setValue(!editForm.get('deliveryShipping')?.value)">
+        <ion-checkbox class="pill" formControlName="deliveryShipping" labelPlacement="end">Envio</ion-checkbox>
+      </ion-item>
+    </div>
+    </div>
+    
+  </form>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="action-buttons-container">
+      <ion-button fill="outline" color="medium" (click)="onCancel()">Cancelar</ion-button>
+      <ion-button (click)="onSave()" [disabled]="editForm.invalid">Salvar Alterações</ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,217 @@
+:host {
+  ion-content {
+    --background: #f9fafb;
+  }
+}
+
+.messages-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1f2937;
+  padding-top: 32px;
+  margin-top: 50px;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.messages-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  flex-grow: 1;
+  min-height: 0;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 320px 1fr;
+  }
+}
+
+.conversations-list {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #e5e7eb;
+  background: #ffffff;
+
+  .list-header {
+    padding: 16px;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 16px 0;
+      color: #1f2937;
+    }
+    ion-searchbar {
+      --box-shadow: none;
+      --background: #f9fafb;
+      --border-radius: 8px;
+      padding: 0;
+      border: 1px solid #e5e7eb;
+    }
+  }
+
+  .conversation-items {
+    flex-grow: 1;
+    overflow-y: auto;
+    --background: #ffffff;
+  }
+
+  .conversation-item {
+    --background: transparent;
+    --padding-start: 16px;
+    --inner-padding-end: 16px;
+    &.active { --background: #f3f4f6; }
+    h2 { font-weight: 600; color: #1f2937; }
+    p { color: #6b7280; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-end {
+      text-align: right; font-size: 0.75em; color: #9ca3af;
+      display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+    }
+  }
+}
+
+.chat-window {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  height: 100%;
+  min-height: 0;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+
+  h2 { margin: 0; font-size: 1.1rem; font-weight: 600; color: #1f2937; }
+  p { margin: 0; font-size: 0.8rem; color: #6b7280; }
+  .header-book-info {
+    margin-left: auto; text-align: right; font-size: 0.8rem;
+    span { color: #6b7280; }
+    p { font-weight: 500; color: #1f2937; }
+  }
+}
+
+.chat-messages {
+  padding: 16px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  
+  .message {
+    display: flex; max-width: 75%; margin-bottom: 12px;
+    .message-bubble {
+      padding: 10px 14px; border-radius: 18px;
+      p { margin: 0 0 4px 0; white-space: pre-wrap; line-height: 1.4; }
+      .timestamp { font-size: 0.7em; text-align: right; display: block; }
+    }
+    &.sent {
+      margin-left: auto;
+      .message-bubble { background: var(--ion-color-primary); color: white; border-bottom-right-radius: 4px; .timestamp { color: rgba(255, 255, 255, 0.7); } }
+    }
+    &.received {
+      margin-right: auto;
+      .message-bubble { background: #e5e7eb; color: #1f2937; border-bottom-left-radius: 4px; .timestamp { color: #9ca3af; } }
+    }
+  }
+}
+
+.chat-input {
+  display: flex; gap: 8px; align-items: center; padding: 12px 16px;
+  border-top: 1px solid #e5e7eb; background: #f9fafb; flex-shrink: 0;
+  .custom-input {
+    flex-grow: 1; --border-color: transparent; --background: #ffffff;
+    border: 1px solid #d1d5db; border-radius: 20px; --min-height: 40px;
+  }
+  ion-button { --border-radius: 50%; width: 40px; height: 40px; flex-shrink: 0; }
+}
+
+.empty-chat-state, .loading-state, .empty-list-state {
+  display: flex; flex-direction: column; justify-content: center;
+  align-items: center; height: 100%; text-align: center;
+  color: #9ca3af; padding: 24px;
+  ion-icon { font-size: 3rem; margin-bottom: 16px; }
+  h2 { font-size: 1.25rem; color: #374151; margin-bottom: 8px; }
+}
+
+// ... (estilos existentes no início do arquivo)
+
+.conversation-item {
+  --background: transparent;
+  --padding-start: 16px;
+  --inner-padding-end: 16px;
+  &.active { --background: #f3f4f6; } // Cor de fundo para item ativo
+  h2 { font-weight: 600; color: #1f2937; }
+  p { color: #6b7280; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  
+  .item-end {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px; // Espaço entre o tempo e o botão
+    font-size: 0.75em; 
+    color: #9ca3af;
+  }
+  
+  // --- NOVOS ESTILOS PARA O BOTÃO DE OPÇÕES ---
+  .options-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    height: 24px; // Altura menor para o botão
+    color: #9ca3af; // Cor cinza para o ícone
+    margin-right: -8px; // Remove margem extra para alinhar melhor
+  }
+}
+
+// ... (resto dos estilos para a janela do chat e balões de mensagem)
+
+// --- ESTILOS PARA ALINHAMENTO DAS MENSAGENS (JÁ CORRETOS) ---
+.message-wrapper {
+  display: flex;
+  width: 100%;
+  margin-bottom: 12px;
+  &.sent-wrapper {
+    justify-content: flex-end;
+  }
+}
+
+.message-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  p { margin: 0 0 4px 0; white-space: pre-wrap; line-height: 1.4; }
+  .timestamp { font-size: 0.7em; text-align: right; display: block; }
+  
+  // Balão enviado (cor primária da sua aplicação, similar ao amarelo do protótipo)
+  &.sent {
+    background: var(--ion-color-primary);
+    color: white;
+    border-bottom-right-radius: 4px;
+    .timestamp { color: rgba(255, 255, 255, 0.7); }
+  }
+
+  // Balão recebido
+  &.received {
+    background: #e5e7eb;
+    color: #1f2937;
+    border-bottom-left-radius: 4px;
+    .timestamp { color: #9ca3af; }
+  }
+}

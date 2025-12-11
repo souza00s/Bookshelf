@@ -1,0 +1,91 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+
+// --- CORREÇÃO APLICADA AQUI ---
+// Comentamos a linha abaixo para impedir que o tema escuro do sistema seja aplicado
+// @import "@ionic/angular/css/palettes/dark.system.css";
+
+.custom-toast {
+  // Define o fundo do toast
+  --background: #ffffff;
+  // Define a cor do texto da mensagem
+  --color: #1f2937; // Um preto forte (gray-800)
+  // Adiciona uma sombra sutil para destacar o toast
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+// Estilo para alertas personalizados
+.custom-alert {
+  // Fundo do alerta
+  .alert-wrapper {
+    background-color: #ffffff;
+  }
+
+  // Cor do título
+  .alert-head h2 {
+    color: #1f2937;
+  }
+
+  // Cor da mensagem
+  .alert-message {
+    color: #4b5563;
+  }
+
+  // Cor dos botões
+  .alert-button {
+    color: var(--ion-color-primary);
+  }
+
+  .alert-button.alert-button-danger {
+    color: var(--ion-color-danger);
+  }
+}
+
+// CORREÇÃO FINAL E FORÇADA PARA O POP-UP DO ION-SELECT
+.sc-ion-alert-md-h,
+.sc-ion-alert-ios-h {
+  .alert-wrapper {
+    background: white !important;
+  }
+  .alert-radio-label {
+    color: #1f2937 !important;
+  }
+  .alert-radio-inner {
+    border-color: var(--ion-color-primary) !important;
+  }
+}

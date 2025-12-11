@@ -1,0 +1,11 @@
+.notifications-container { display:flex; flex-direction:column; min-height:100%; width:100%; max-width:900px; margin:0 auto; }
+.page-title { font-size:1.8rem; font-weight:700; color:#1f2937; padding-top:32px; margin-top:50px; margin-bottom:24px; }
+.actions-bar { display:flex; justify-content:flex-end; margin-bottom:8px; }
+.row { display:flex; justify-content:space-between; align-items:center; }
+ion-item { --background:#fff; border:1px solid #e5e7eb; border-radius:10px; margin-bottom:8px; align-items:flex-start; }
+.more-actions { align-self:flex-start; margin-top:4px; }
+h3 { margin:0; color:#1f2937; font-weight:700; }
+h3.unread { font-weight:700; }
+.date { color:#6b7280; font-size:12px; }
+.actions { margin-top:8px; }
+.reserved-label { color:#92400e; font-weight:600; }

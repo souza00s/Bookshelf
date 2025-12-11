@@ -1,0 +1,94 @@
+<ion-content [fullscreen]="true" [scrollY]="false">
+  <div class="messages-container">
+    <h1 class="page-title">Minhas Mensagens</h1>
+
+    <div class="messages-layout">
+      <div class="conversations-list">
+        <div class="list-header">
+          <h2>Conversas</h2>
+          <ion-searchbar placeholder="Pesquisar"></ion-searchbar>
+        </div>
+
+        <div *ngIf="isLoading" class="loading-state">
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+
+        <ion-list *ngIf="!isLoading && conversations.length > 0" class="conversation-items" lines="none">
+          <ion-item *ngFor="let convo of conversations"
+                    (click)="selectConversation(convo)"
+                    [class.active]="selectedConversation?.id === convo.id"
+                    class="conversation-item"
+                    button>
+            <ion-avatar slot="start" *ngIf="convo.otherUser">
+              <img [src]="convo.otherUser.avatarUrl || 'assets/images/default-avatar.png'" [alt]="convo.otherUser.name">
+            </ion-avatar>
+            <ion-label *ngIf="convo.otherUser">
+              <h2>{{ convo.otherUser.name }}</h2>
+              <p>{{ convo.lastMessage?.content }}</p>
+            </ion-label>
+            <div class="item-end">
+              <span class="timestamp">{{ convo.lastMessage?.timestamp | date:'shortTime' }}</span>
+              <ion-button fill="clear" class="options-button" (click)="presentConversationOptions($event, convo)">
+                <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-item>
+        </ion-list>
+
+        <div *ngIf="!isLoading && conversations.length === 0" class="empty-list-state">
+          <ion-icon name="mail-unread-outline"></ion-icon>
+          <p>Nenhuma conversa encontrada.</p>
+        </div>
+      </div>
+
+      <div class="chat-window" *ngIf="selectedConversation; else noConversationSelected">
+        <div class="chat-header">
+          <ion-avatar>
+            <img [src]="selectedConversation.otherUser?.avatarUrl || 'assets/images/default-avatar.png'" [alt]="selectedConversation.otherUser?.name">
+          </ion-avatar>
+          <div class="header-info">
+            <h2>{{ selectedConversation.otherUser?.name }}</h2>
+            <p>Online</p>
+          </div>
+          <div class="header-book-info">
+            <span>Sobre o livro:</span>
+            <p>{{ selectedConversation.book.title }}</p>
+          </div>
+        </div>
+
+  <div class="chat-messages scrollable">
+          <div *ngFor="let msg of selectedConversation.messages"
+               class="message-wrapper"
+         [ngClass]="{'sent-wrapper': isSent(msg)}">
+      <div class="message-bubble" [ngClass]="{'sent': isSent(msg), 'received': !isSent(msg)}">
+              <p>{{ msg.content }}</p>
+              <span class="timestamp">{{ msg.timestamp | date:'HH:mm' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <form (ngSubmit)="sendMessage()" class="chat-input">
+          <ion-item class="custom-input" lines="none">
+            <ion-textarea placeholder="Digite sua mensagem..."
+                          [autoGrow]="true"
+                          [(ngModel)]="newMessage"
+                          name="newMessage"
+                          (keydown.enter)="sendMessage(); $event.preventDefault()">
+            </ion-textarea>
+          </ion-item>
+          <ion-button type="submit" [disabled]="!newMessage.trim()">
+            <ion-icon slot="icon-only" name="send"></ion-icon>
+          </ion-button>
+        </form>
+      </div>
+
+      <ng-template #noConversationSelected>
+        <div class="empty-chat-state">
+          <ion-icon name="chatbubbles-outline"></ion-icon>
+          <h2>Selecione uma conversa</h2>
+          <p>Escolha uma conversa na lista para ver as mensagens.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</ion-content>

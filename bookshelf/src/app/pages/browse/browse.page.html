@@ -1,0 +1,73 @@
+<ion-content>
+  <div class="browse-container">
+    <h1 class="page-title">Encontrar Livros</h1>
+
+    <div class="filter-bar" [formGroup]="filterForm">
+      <ion-searchbar formControlName="searchTerm" placeholder="Buscar por título ou autor"></ion-searchbar>
+      <ion-button fill="clear" (click)="toggleFilters()" class="filter-button">
+        <ion-icon slot="icon-only" name="options-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+  <div class="filter-panel" *ngIf="showFilters" [formGroup]="filterForm">
+      <div class="panel-header">
+        <h3>Filtros</h3>
+        <ion-button fill="clear" size="small" (click)="clearFilters()">Limpar todos</ion-button>
+      </div>
+      
+      <div class="filters-container">
+        <div class="delivery-pill-group">
+          <button type="button" class="pill" [class.active]="filterForm.value.delivery==='localPickup'" (click)="setDelivery('localPickup')">Retirada Local</button>
+          <button type="button" class="pill" [class.active]="filterForm.value.delivery==='shipping'" (click)="setDelivery('shipping')">Envio</button>
+          <button type="button" class="pill" [class.active]="!filterForm.value.delivery" (click)="setDelivery('')">Todos</button>
+        </div>
+        <div class="filter-group">
+          <ion-label>Estado do Livro</ion-label>
+          <ion-item class="filter-item">
+            <ion-select formControlName="condition" interface="popover" placeholder="Todos os estados">
+              <ion-select-option value="">Todos os estados</ion-select-option>
+              <ion-select-option value="novo">Novo</ion-select-option>
+              <ion-select-option value="excelente">Excelente</ion-select-option>
+              <ion-select-option value="bom">Bom</ion-select-option>
+              <ion-select-option value="usado">Usado</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+
+        <div class="filter-group">
+          <ion-label>Género</ion-label>
+          <ion-item class="filter-item">
+            <ion-select formControlName="genre" interface="popover" placeholder="Todos os géneros">
+              <ion-select-option value="">Todos os géneros</ion-select-option>
+              <ion-select-option value="romance">Romance</ion-select-option>
+              <ion-select-option value="ficcao">Ficção</ion-select-option>
+              <ion-select-option value="infantil">Infantil</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+
+        <div class="filter-group">
+          <ion-label>Tipo de Entrega</ion-label>
+          <ion-item class="filter-item">
+            <ion-select formControlName="delivery" interface="popover" placeholder="Todos os tipos">
+              <ion-select-option value="">Todos os tipos</ion-select-option>
+              <ion-select-option value="localPickup">Retirada Local</ion-select-option>
+              <ion-select-option value="shipping">Envio</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+      </div>
+    </div>
+
+    <div class="books-grid-wrapper">
+      <div class="books-grid" *ngIf="filteredBooks$ | async as books">
+        <app-book-card *ngFor="let book of books" [book]="book"></app-book-card>
+      </div>
+      <div class="empty-state" *ngIf="(filteredBooks$ | async)?.length === 0">
+        <ion-icon name="search-outline"></ion-icon>
+        <h3>Nenhum livro encontrado</h3>
+        <p>Tente ajustar os seus filtros ou termo de pesquisa.</p>
+      </div>
+    </div>
+  </div>
+</ion-content>

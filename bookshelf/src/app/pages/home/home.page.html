@@ -1,0 +1,51 @@
+<ion-content [fullscreen]="true">
+  <section class="hero-section">
+    <div class="hero-content-wrapper">
+      <div class="hero-text">
+        <h1>Compartilhe histórias, inspire leitores</h1>
+        <p>Doe livros que você já leu e descubra novas histórias. Conectamos quem quer doar com quem quer ler.</p>
+        <div class="hero-buttons">
+          <ion-button routerLink="/browse" class="find-books-btn">Encontrar Livros</ion-button>
+          <ion-button routerLink="/donate" fill="outline" class="donate-books-btn">Doar Livros</ion-button>
+        </div>
+      </div>
+      <div class="hero-image">
+        <div class="image-bg"></div>
+        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=1374&auto=format=fit=crop" alt="Pilha de livros">
+      </div>
+    </div>
+  </section>
+
+  <section class="how-it-works-section">
+    <h2 class="section-title">Como funciona?</h2>
+    <div class="steps-container">
+      <div class="step">
+        <div class="icon-wrapper">
+          <ion-icon name="search-outline"></ion-icon>
+        </div>
+        <h3>Explore</h3>
+        <p>Navegue pelo catálogo de livros disponíveis para doação na sua região.</p>
+      </div>
+      <div class="step">
+        <div class="icon-wrapper">
+          <ion-icon name="gift-outline"></ion-icon>
+        </div>
+        <h3>Solicite ou Doe</h3>
+        <p>Solicite um livro que deseja ler ou cadastre livros para doar.</p>
+      </div>
+      <div class="step">
+        <div class="icon-wrapper">
+          <ion-icon name="swap-horizontal-outline"></ion-icon>
+        </div>
+        <h3>Conecte-se</h3>
+        <p>Entre em contato e combine a melhor forma de entregar ou receber o livro.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2 class="section-title">Tem livros parados na estante?</h2>
+    <p>Compartilhe conhecimento com quem precisa. Seus livros podem transformar vidas.</p>
+    <ion-button routerLink="/donate" class="donate-now-btn">Doar Agora</ion-button>
+  </section>
+</ion-content>

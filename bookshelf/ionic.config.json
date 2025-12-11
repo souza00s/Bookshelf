@@ -1,0 +1,7 @@
+{
+  "name": "bookshelf",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

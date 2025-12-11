@@ -1,0 +1,133 @@
+<ion-content>
+  <div class="profile-container" *ngIf="user$ | async as user">
+    <h1 class="page-title">Meu Perfil</h1>
+    <div class="grid-layout">
+      <div class="profile-card">
+        <div class="avatar-container">
+          <img [src]="user.avatarUrl || 'assets/images/default-avatar.png'" alt="Avatar do usuário">
+        </div>
+        <h2 class="name-line">
+          <span class="only-name">{{ user.name }}</span>
+          <ion-icon name="pencil-outline" class="name-edit" (click)="onEditSection(user,'basic')"></ion-icon>
+        </h2>
+        <p class="description" *ngIf="user.description; else noDescription">
+          {{ user.description }}
+        </p>
+        <ng-template #noDescription>
+          <p class="description placeholder">Nenhuma descrição adicionada.</p>
+        </ng-template>
+  <div class="divider"></div>
+  <div class="profile-tabs">
+          <button [class.active]="selectedProfileTab==='genres'" (click)="setTab('genres')" aria-label="Géneros" title="Géneros">
+            <ion-icon name="pricetags-outline"></ion-icon>
+          </button>
+          <button [class.active]="selectedProfileTab==='pix'" (click)="setTab('pix')" aria-label="PIX" title="PIX">
+            <ion-icon name="key-outline"></ion-icon>
+          </button>
+          <button [class.active]="selectedProfileTab==='addresses'" (click)="setTab('addresses')" aria-label="Endereços" title="Endereços">
+            <ion-icon name="location-outline"></ion-icon>
+          </button>
+        </div>
+
+        <div class="details-section" *ngIf="selectedProfileTab==='genres'">
+          <div class="detail-item"><ion-icon name="pricetags-outline"></ion-icon><h3>Géneros Favoritos</h3></div>
+          <div class="genres-container" *ngIf="user.favoriteGenres && user.favoriteGenres.length > 0; else noGenres">
+            <ion-chip *ngFor="let genre of user.favoriteGenres"><ion-label>{{ genre }}</ion-label></ion-chip>
+          </div>
+          <ng-template #noGenres><p class="placeholder">Nenhum género favorito adicionado.</p></ng-template>
+          <ion-button expand="block" fill="outline" (click)="onEditSection(user,'genres')">Editar</ion-button>
+        </div>
+
+        <div class="details-section" *ngIf="selectedProfileTab==='pix'">
+          <div class="detail-item"><ion-icon name="key-outline"></ion-icon><h3>Chaves PIX</h3></div>
+          <ng-container *ngIf="pixKeysOf(user).length > 0; else noPixKey">
+            <ul class="pix-keys-list">
+              <li *ngFor="let k of pixKeysOf(user)" class="pix-key-item" [innerText]="k"></li>
+            </ul>
+          </ng-container>
+          <ng-template #noPixKey><p class="placeholder">Nenhuma chave PIX cadastrada.</p></ng-template>
+          <ion-button expand="block" fill="outline" (click)="onEditSection(user,'pix')">Editar</ion-button>
+        </div>
+
+        <div class="details-section" *ngIf="selectedProfileTab==='addresses'">
+          <div class="detail-item"><ion-icon name="location-outline"></ion-icon><h3>Endereços</h3></div>
+          <div *ngIf="user.addresses && user.addresses.length > 0; else noAddresses">
+            <div class="addresses">
+              <div class="address" *ngFor="let a of user.addresses">
+                <div class="line title">{{ a.label || 'Endereço' }}</div>
+                <div class="line">CEP: {{ a.cep }}</div>
+                <div class="line">{{ a.street }} {{ a.number }} <span *ngIf="a.complement">- {{ a.complement }}</span></div>
+                <div class="line">{{ a.neighborhood }}</div>
+                <div class="line">{{ a.city }} - {{ a.state }} {{ a.country }}</div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noAddresses><p class="placeholder">Nenhum endereço cadastrado.</p></ng-template>
+          <ion-button expand="block" fill="outline" (click)="onEditSection(user,'addresses')">Editar</ion-button>
+        </div>
+        <ion-button expand="block" fill="clear" color="danger" (click)="onDeleteAccount()">Excluir Conta</ion-button>
+      </div>
+
+  <div class="books-section" *ngIf="user.books && user.books.length > 0; else emptyState">
+        <div class="books-header">
+          <h2>Meus Livros</h2>
+          <a routerLink="/donate">+ Cadastrar Novo</a>
+        </div>
+
+        <!-- ATIVOS -->
+    <div class="sub-section" *ngIf="activeBooks(user).length > 0">
+          <h3 class="sub-title">Ativos</h3>
+          <div class="books-list">
+      <div *ngFor="let book of activeBooks(user)" class="book-item">
+              <img [src]="book.coverUrl" [alt]="book.title" class="book-cover">
+              <div class="book-info">
+                <h3>{{ book.title }}</h3>
+                <p>{{ book.author }}</p>
+              </div>
+              <div class="book-actions">
+                <ion-button fill="clear" size="small" (click)="onEditBook(book)">
+                  <ion-icon slot="icon-only" name="pencil-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" size="small" color="danger" (click)="onDeleteBook(book.id)">
+                  <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ARQUIVADOS / VENDIDOS -->
+        <div class="sub-section archived-block" *ngIf="archivedBooks(user).length > 0">
+          <h3 class="sub-title">Arquivados | Vendidos</h3>
+          <div class="books-list archived">
+            <div *ngFor="let book of archivedBooks(user)" class="book-item archived-item">
+              <img [src]="book.coverUrl" [alt]="book.title" class="book-cover dim">
+              <div class="book-info">
+                <h3>{{ book.title }}</h3>
+                <p>{{ book.author }}</p>
+                <ion-badge color="warning" *ngIf="book.status === 'RESERVED'">Reservado</ion-badge>
+                <ion-badge color="medium" *ngIf="book.status === 'SHIPPED'">Enviado</ion-badge>
+                <ion-badge color="success" *ngIf="book.status === 'COMPLETED'">Concluído</ion-badge>
+                <ion-badge color="medium" *ngIf="!book.status && book.available === false">Inativo</ion-badge>
+              </div>
+              <div class="book-actions">
+                <ion-button fill="solid" size="small" color="primary" (click)="onRelist(book)" *ngIf="book.status !== 'AVAILABLE'">Reanunciar</ion-button>
+                <ion-button fill="clear" size="small" color="danger" (click)="onDeleteBook(book.id)">
+                  <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #emptyState>
+        <div class="empty-state">
+          <ion-icon name="book-outline"></ion-icon>
+          <p>Você ainda não cadastrou nenhum livro</p>
+          <ion-button routerLink="/donate" fill="clear">Cadastrar Livro</ion-button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,185 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Taxa de Envio</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding shipping-page">
+  <ng-container *ngIf="(book$ | async) as book; else loadingTpl">
+    <ng-container *ngIf="!loadError; else errorTpl">
+  <div class="back-wrapper">
+  <a class="back-link" [routerLink]="['/book-detail', book.id]">
+      <ion-icon name="chevron-back-outline"></ion-icon>
+      Voltar para detalhes do livro
+    </a>
+  </div>
+
+    <ion-grid fixed>
+      <ion-row class="page-grid">
+        <!-- Left column -->
+        <ion-col size="12" sizeMd="8">
+          <ion-card class="main-card">
+            <ion-card-header>
+              <ion-card-title>Taxa de Envio</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <!-- Book block -->
+              <div class="book-info">
+                <div class="cover">
+                  <img [src]="book.coverUrl || 'assets/images/placeholder.png'" alt="{{book.title}}" />
+                </div>
+                <div class="meta">
+                  <h2>{{ book.title }}</h2>
+                  <p class="author">{{ book.author }}</p>
+                  <p class="donor" *ngIf="book.owner?.name">Doado por: {{ book.owner?.name }}</p>
+                </div>
+              </div>
+
+              <!-- Info banner -->
+              <div class="info-banner">
+                <ion-icon name="bus-outline"></ion-icon>
+                <div>
+                  <div class="title">Informações de Envio</div>
+                  <div class="desc">O livro será enviado pelo doador após a confirmação do pagamento da taxa de envio. Prazo estimado de entrega varia por serviço.</div>
+                </div>
+              </div>
+
+              <!-- Address block -->
+              <div class="address-block">
+                <div class="title">Endereço de Entrega</div>
+                <div *ngIf="(auth.currentUserValue?.addresses?.length || 0) > 0; else cepManual">
+                  <ion-segment value="{{ useSavedAddress ? 'saved' : 'new' }}" (ionChange)="useSavedAddress = $event.detail.value === 'saved'">
+                    <ion-segment-button value="saved">Usar endereço salvo</ion-segment-button>
+                    <ion-segment-button value="new">Outro endereço</ion-segment-button>
+                  </ion-segment>
+                  <div *ngIf="useSavedAddress">
+                    <ion-item class="custom-input">
+                      <ion-select [(ngModel)]="selectedAddressId" placeholder="Selecione um endereço">
+                        <ion-select-option *ngFor="let a of auth.currentUserValue?.addresses" [value]="a.id">{{ a.label || ('CEP ' + a.cep) }}</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                  </div>
+                  <div *ngIf="!useSavedAddress">
+                    <ion-grid class="no-padding">
+                      <ion-row>
+                        <ion-col size="12" size-md="4"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.label" [ngModelOptions]="{standalone:true}" placeholder="Apelido"></ion-input></ion-item></ion-col>
+                        <ion-col size="12" size-md="4"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddressCep" (ionInput)="onNewCepBlur()" (ionBlur)="onNewCepBlur()" inputmode="numeric" placeholder="CEP *"></ion-input></ion-item></ion-col>
+                        <ion-col size="12" size-md="4"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.street" [ngModelOptions]="{standalone:true}" placeholder="Rua"></ion-input></ion-item></ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="6" size-md="3"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.number" [ngModelOptions]="{standalone:true}" placeholder="Número"></ion-input></ion-item></ion-col>
+                        <ion-col size="6" size-md="3"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.complement" [ngModelOptions]="{standalone:true}" placeholder="Complemento"></ion-input></ion-item></ion-col>
+                        <ion-col size="12" size-md="6"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.neighborhood" [ngModelOptions]="{standalone:true}" placeholder="Bairro"></ion-input></ion-item></ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="6" size-md="5"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.city" [ngModelOptions]="{standalone:true}" placeholder="Cidade"></ion-input></ion-item></ion-col>
+                        <ion-col size="3" size-md="2"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.state" [ngModelOptions]="{standalone:true}" placeholder="UF"></ion-input></ion-item></ion-col>
+                        <ion-col size="3" size-md="3"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.country" [ngModelOptions]="{standalone:true}" placeholder="País"></ion-input></ion-item></ion-col>
+                      </ion-row>
+                    </ion-grid>
+                  </div>
+                </div>
+                <ng-template #cepManual>
+                  <div class="address">
+                    <ion-icon name="map-outline"></ion-icon>
+                    <span *ngIf="toCep; else noCep">CEP: {{ toCep }}</span>
+                    <ng-template #noCep><span>Informe o CEP de entrega</span></ng-template>
+                  </div>
+                  <div class="address-edit">
+                    <ion-item class="cep-input" lines="none">
+                      <ion-label position="stacked">CEP do Destinatário</ion-label>
+                      <ion-input [(ngModel)]="toCep" inputmode="numeric" placeholder="00000-000"></ion-input>
+                    </ion-item>
+                  </div>
+                </ng-template>
+              </div>
+
+              <!-- Quote inputs small -->
+              <div class="dims-grid">
+                <ion-item>
+                  <ion-label position="stacked">Peso (kg)</ion-label>
+                  <ion-input type="number" [(ngModel)]="weightKg"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Compr. (cm)</ion-label>
+                  <ion-input type="number" [(ngModel)]="lengthCm"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Altura (cm)</ion-label>
+                  <ion-input type="number" [(ngModel)]="heightCm"></ion-input>
+                </ion-item>
+                <ion-item>
+                  <ion-label position="stacked">Largura (cm)</ion-label>
+                  <ion-input type="number" [(ngModel)]="widthCm"></ion-input>
+                </ion-item>
+                <ion-button class="quote-btn" expand="block" (click)="quote()" [disabled]="isLoading || (!useSavedAddress && !newAddressCep && !toCep) || (useSavedAddress && !(selectedAddressId || toCep))">
+                  {{ isLoading ? 'Calculando...' : 'Calcular frete' }}
+                </ion-button>
+              </div>
+
+              <!-- Options list -->
+              <div *ngIf="options.length" class="options">
+                <ion-list>
+                  <ion-radio-group [(ngModel)]="selected">
+                    <ion-item *ngFor="let opt of options" (click)="selectOption(opt)">
+                      <ion-radio slot="start" [value]="opt"></ion-radio>
+                      <ion-label>
+                        <h3>{{ opt.serviceName }}</h3>
+                        <p>{{ opt.deliveryTime }}</p>
+                      </ion-label>
+                      <ion-note slot="end">R$ {{ opt.price | number:'1.2-2' }}</ion-note>
+                    </ion-item>
+                  </ion-radio-group>
+                </ion-list>
+              </div>
+
+              <!-- Payment moved to modal -->
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+
+        <!-- Right column (sticky summary) -->
+        <ion-col size="12" sizeMd="4">
+          <ion-card class="summary-card sticky">
+            <ion-card-header>
+              <ion-card-title>Resumo</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item lines="none">
+                <ion-label>Valor do livro</ion-label>
+                <ion-note slot="end">R$ 0,00</ion-note>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-label>Taxa de envio</ion-label>
+                <ion-note slot="end">R$ {{ (selected?.price || 0) | number:'1.2-2' }}</ion-note>
+              </ion-item>
+              <ion-item class="total-row" lines="full">
+                <ion-label>Total</ion-label>
+                <ion-note slot="end" class="total">R$ {{ (selected?.price || 0) | number:'1.2-2' }}</ion-note>
+              </ion-item>
+              <ion-button expand="block" color="warning" [disabled]="!selected || !(book.owner?.pixKey || book.owner?.pixKeys?.length)" (click)="openPayment(book.owner?.pixKey || book.owner?.pixKeys?.[0])">
+                Pagar Taxa de Envio
+              </ion-button>
+              <div class="legal-note">Ao concluir o pagamento, você concorda com os Termos de Uso e Política de Privacidade.</div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #loadingTpl>
+    <div class="loading-block">
+      <ion-skeleton-text animated style="width: 60%; height:24px; border-radius:6px;"></ion-skeleton-text>
+      <ion-skeleton-text animated style="width: 90%; height:180px; border-radius:12px; margin-top:16px;"></ion-skeleton-text>
+    </div>
+  </ng-template>
+
+  <ng-template #errorTpl>
+    <div class="error-state">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <p>{{ loadError }}</p>
+    </div>
+  </ng-template>
+</ion-content>

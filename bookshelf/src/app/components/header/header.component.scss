@@ -1,0 +1,78 @@
+ion-toolbar {
+  --background: #ffffff;
+  --min-height: 50px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.toolbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-decoration: none;
+  span { color: #000; }
+  ion-icon { font-size: 1.8rem; }
+}
+.nav-links {
+  display: flex;
+  gap: 32px;
+  font-weight: 500;
+  font-weight: bold;
+  color: #000;
+  a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s;
+    &.active-link, &:hover {
+      color: var(--ion-color-primary);
+    }
+  }
+}
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.action-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  ion-icon {
+    font-size: 1.5rem;
+    color: #000;
+    transition: color 0.2s;
+  }
+  &:hover ion-icon {
+    color: var(--ion-color-primary);
+  }
+}
+.login-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  color: #000;
+  text-decoration: none;
+  transition: color 0.2s;
+  &:hover {
+    color: var(--ion-color-primary);
+  }
+}
+.action-button.notif { position: relative; }
+.action-button.notif .badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: var(--ion-color-danger);
+  color: #fff; border-radius: 999px; font-size: 10px; line-height: 1; padding: 2px 6px;
+}

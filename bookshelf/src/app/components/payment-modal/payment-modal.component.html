@@ -1,0 +1,63 @@
+<ion-header class="pm-header">
+  <ion-toolbar>
+    <ion-title>Pagamento do Frete</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding modern">
+  <div class="modal-body">
+    <div class="hero">
+      <div class="icon"><ion-icon name="cash-outline"></ion-icon></div>
+      <div class="text-block">
+        <h2>Confirme o pagamento</h2>
+        <p class="desc">Selecione uma chave PIX do doador e efetue o pagamento da taxa de envio. Em seguida confirmaremos ao vendedor.</p>
+      </div>
+    </div>
+
+    <div class="amount-card" *ngIf="amount !== null">
+      <div class="amount-left">
+        <span class="amount-label">Total do frete</span>
+        <span class="amount-sub">Valor estimado</span>
+      </div>
+      <div class="amount-value" aria-label="Valor do frete">
+        <span class="currency">R$</span><span class="number">{{ amount | number:'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <div class="pix-section">
+      <div class="section-header">
+        <h3>Chaves PIX disponíveis</h3>
+        <span *ngIf="copied" class="copied">Copiada!</span>
+      </div>
+
+    <ng-container *ngIf="uniqueKeys.length; else noPixList">
+        <ion-list inset="true" class="pix-list" lines="none">
+      <ion-item *ngFor="let key of uniqueKeys" (click)="chooseKey(key)" [class.selected]="selectedKey === key || (!selectedKey && key === pixKey)">
+            <div class="key-wrapper">
+              <ion-icon name="key-outline" class="kicon"></ion-icon>
+        <div class="ktext" [title]="key">{{ key }}</div>
+            </div>
+            <div class="actions-inline">
+        <ion-button size="small" fill="clear" (click)="copyKey(key); $event.stopPropagation()" aria-label="Copiar chave">
+                <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
+              </ion-button>
+              <div class="selector" [class.on]="selectedKey === key || (!selectedKey && key === pixKey)"></div>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ng-container>
+      <ng-template #noPixList>
+        <div class="empty-pix">O doador ainda não cadastrou nenhuma chave PIX.</div>
+      </ng-template>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="pm-footer">
+  <ion-toolbar>
+    <div class="actions">
+      <ion-button class="btn-cancel" (click)="cancel()">Cancelar</ion-button>
+      <ion-button class="btn-confirm" (click)="confirm()" [disabled]="(uniqueKeys.length > 1 && !selectedKey) || !uniqueKeys.length">Confirmar</ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
