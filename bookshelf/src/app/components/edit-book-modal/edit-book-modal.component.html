@@ -57,6 +57,8 @@
           <ion-select-option value="ficcao">Ficção</ion-select-option>
           <ion-select-option value="infantil">Infantil</ion-select-option>
           <ion-select-option value="biografia">Biografia</ion-select-option>
+          <ion-select-option value="autoajuda">Autoajuda</ion-select-option>
+          <ion-select-option value="academico">Acadêmico</ion-select-option>
         </ion-select>
       </ion-item>
     </div>
@@ -66,14 +68,13 @@
         <ion-textarea formControlName="description" [autoGrow]="true" placeholder="Detalhes sobre o livro, edição, etc."></ion-textarea>
       </ion-item>
     </div>
-    <div class="input-group">
-    <ion-label>Opções de Entrega *</ion-label>
-    <div class="checkbox-group">
-      <ion-item lines="none" class="delivery-toggle" [class.active]="editForm.get('deliveryLocalPickup')?.value" (click)="editForm.get('deliveryLocalPickup')?.setValue(!editForm.get('deliveryLocalPickup')?.value)">
-        <ion-checkbox class="pill" formControlName="deliveryLocalPickup" labelPlacement="end">Retirada Local</ion-checkbox>
+  <div class="input-group">
+  <div class="checkbox-group">
+      <ion-item lines="none" class="delivery-toggle" [class.active]="editForm.get('deliveryLocalPickup')?.value">
+        <ion-checkbox class="pill" formControlName="deliveryLocalPickup" (ionChange)="editForm.get('deliveryLocalPickup')?.setValue($event.detail.checked)" labelPlacement="end">Retirada Local</ion-checkbox>
       </ion-item>
-      <ion-item lines="none" class="delivery-toggle" [class.active]="editForm.get('deliveryShipping')?.value" (click)="editForm.get('deliveryShipping')?.setValue(!editForm.get('deliveryShipping')?.value)">
-        <ion-checkbox class="pill" formControlName="deliveryShipping" labelPlacement="end">Envio</ion-checkbox>
+      <ion-item lines="none" class="delivery-toggle" [class.active]="editForm.get('deliveryShipping')?.value">
+        <ion-checkbox class="pill" formControlName="deliveryShipping" (ionChange)="editForm.get('deliveryShipping')?.setValue($event.detail.checked)" labelPlacement="end">Envio</ion-checkbox>
       </ion-item>
     </div>
     </div>
@@ -84,8 +85,8 @@
 <ion-footer>
   <ion-toolbar>
     <div class="action-buttons-container">
-      <ion-button fill="outline" color="medium" (click)="onCancel()">Cancelar</ion-button>
-      <ion-button (click)="onSave()" [disabled]="editForm.invalid">Salvar Alterações</ion-button>
+  <ion-button fill="solid" color="medium" (click)="onCancel()">Cancelar</ion-button>
+  <ion-button fill="solid" color="primary" (click)="onSave()" [disabled]="editForm.invalid">Salvar Alterações</ion-button>
     </div>
   </ion-toolbar>
 </ion-footer>

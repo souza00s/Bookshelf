@@ -93,6 +93,8 @@ ion-content {
     text-align: left;
     margin-bottom: 24px;
   }
+  .pix-keys-list { display:flex; flex-wrap:wrap; gap:8px; padding:0; list-style:none; }
+  .pix-key-item { background:#f3f4f6; border:1px solid #e5e7eb; border-radius:9999px; padding:6px 12px; font-size:0.85rem; color:#1f2937; }
   .detail-item {
     display: flex;
     align-items: center;
@@ -113,20 +115,7 @@ ion-content {
 .details-section .address { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; }
 .details-section .address .title { font-weight: 700; color: #111827; margin-bottom: 6px; }
 .details-section .address .line { color: #4b5563; font-size: 0.9em; }
-  .genres-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-    ion-chip {
-      background: #fef3c7;
-      color: #92400e;
-      height: 28px;
-      font-size: 0.8em;
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-  }
+  /* removed genres UI */
   .placeholder {
     font-style: italic;
     color: #9ca3af;

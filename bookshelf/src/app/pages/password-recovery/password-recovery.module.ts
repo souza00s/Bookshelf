@@ -15,6 +15,6 @@ import { PasswordRecoveryPage } from './password-recovery.page';
     IonicModule,
     PasswordRecoveryPageRoutingModule,
   ],
-  declarations: [PasswordRecoveryPage]
+  
 })
 export class PasswordRecoveryPageModule {}

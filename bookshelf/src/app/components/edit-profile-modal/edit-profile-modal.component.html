@@ -45,17 +45,7 @@
       </p>
     </div>
 
-    <div class="input-group" *ngIf="section === 'genres'">
-      <ion-label>Géneros Favoritos</ion-label>
-      <div class="genres-container">
-        <ion-chip *ngFor="let genre of genreOptions"
-                  [outline]="!isGenreSelected(genre)"
-                  (click)="toggleGenre(genre)"
-                  [color]="isGenreSelected(genre) ? 'primary' : 'medium'">
-          <ion-label>{{ genre }}</ion-label>
-        </ion-chip>
-      </div>
-    </div>
+  <!-- genres removed -->
 
   <div class="input-group" *ngIf="section === 'pix'">
       <ion-label>Chaves PIX</ion-label>
@@ -71,8 +61,9 @@
         <p class="placeholder">Nenhuma chave adicionada.</p>
       </ng-template>
       <ion-item class="custom-input add-pix" lines="none">
+        <ion-icon name="key-outline" slot="start"></ion-icon>
         <ion-input [(ngModel)]="newPixKeyInput" placeholder="E-mail, CPF/CNPJ, telefone..." [ngModelOptions]="{standalone:true}"></ion-input>
-  <ion-button size="small" (click)="addPixKey()" [disabled]="!newPixKeyInput.trim()">Adicionar</ion-button>
+        <ion-button size="small" (click)="addPixKey()" [disabled]="!newPixKeyInput.trim()">Adicionar</ion-button>
       </ion-item>
       <p class="helper-text">Adicione uma ou mais chaves. Apenas quem paga verá.</p>
     </div>
@@ -168,8 +159,8 @@
 <ion-footer>
   <ion-toolbar>
     <div class="action-buttons-container">
-      <ion-button fill="outline" color="medium" (click)="onCancel()">Cancelar</ion-button>
-      <ion-button (click)="onSave()" [disabled]="editForm.invalid">Salvar Alterações</ion-button>
+      <ion-button fill="solid" color="medium" (click)="onCancel()">Cancelar</ion-button>
+      <ion-button fill="solid" color="primary" (click)="onSave()" [disabled]="editForm.invalid">Salvar Alterações</ion-button>
     </div>
   </ion-toolbar>
 </ion-footer>

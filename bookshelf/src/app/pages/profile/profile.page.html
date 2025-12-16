@@ -18,24 +18,12 @@
         </ng-template>
   <div class="divider"></div>
   <div class="profile-tabs">
-          <button [class.active]="selectedProfileTab==='genres'" (click)="setTab('genres')" aria-label="Géneros" title="Géneros">
-            <ion-icon name="pricetags-outline"></ion-icon>
-          </button>
           <button [class.active]="selectedProfileTab==='pix'" (click)="setTab('pix')" aria-label="PIX" title="PIX">
             <ion-icon name="key-outline"></ion-icon>
           </button>
           <button [class.active]="selectedProfileTab==='addresses'" (click)="setTab('addresses')" aria-label="Endereços" title="Endereços">
             <ion-icon name="location-outline"></ion-icon>
           </button>
-        </div>
-
-        <div class="details-section" *ngIf="selectedProfileTab==='genres'">
-          <div class="detail-item"><ion-icon name="pricetags-outline"></ion-icon><h3>Géneros Favoritos</h3></div>
-          <div class="genres-container" *ngIf="user.favoriteGenres && user.favoriteGenres.length > 0; else noGenres">
-            <ion-chip *ngFor="let genre of user.favoriteGenres"><ion-label>{{ genre }}</ion-label></ion-chip>
-          </div>
-          <ng-template #noGenres><p class="placeholder">Nenhum género favorito adicionado.</p></ng-template>
-          <ion-button expand="block" fill="outline" (click)="onEditSection(user,'genres')">Editar</ion-button>
         </div>
 
         <div class="details-section" *ngIf="selectedProfileTab==='pix'">
@@ -46,7 +34,7 @@
             </ul>
           </ng-container>
           <ng-template #noPixKey><p class="placeholder">Nenhuma chave PIX cadastrada.</p></ng-template>
-          <ion-button expand="block" fill="outline" (click)="onEditSection(user,'pix')">Editar</ion-button>
+          <ion-button expand="block" fill="solid" (click)="onEditSection(user,'pix')">Editar</ion-button>
         </div>
 
         <div class="details-section" *ngIf="selectedProfileTab==='addresses'">
@@ -63,7 +51,7 @@
             </div>
           </div>
           <ng-template #noAddresses><p class="placeholder">Nenhum endereço cadastrado.</p></ng-template>
-          <ion-button expand="block" fill="outline" (click)="onEditSection(user,'addresses')">Editar</ion-button>
+          <ion-button expand="block" fill="solid" (click)="onEditSection(user,'addresses')">Editar</ion-button>
         </div>
         <ion-button expand="block" fill="clear" color="danger" (click)="onDeleteAccount()">Excluir Conta</ion-button>
       </div>

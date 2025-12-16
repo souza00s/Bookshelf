@@ -16,7 +16,7 @@ import { EditBookModalComponent } from 'src/app/components/edit-book-modal/edit-
 })
 export class ProfilePage implements OnInit {
   public user$!: Observable<User | null>;
-  selectedProfileTab: 'genres' | 'pix' | 'addresses' = 'genres';
+  selectedProfileTab: 'pix' | 'addresses' = 'pix';
 
   constructor(
     private authService: AuthService,
@@ -27,7 +27,7 @@ export class ProfilePage implements OnInit {
 
   ngOnInit() { this.user$ = this.authService.currentUser$; }
 
-  setTab(tab: 'genres'|'pix'|'addresses') { this.selectedProfileTab = tab; }
+  setTab(tab: 'pix'|'addresses') { this.selectedProfileTab = tab; }
 
   // Combina pixKey (legacy com separador ||) e pixKeys (lista nova), remove vazios e duplicados
   pixKeysOf(user: User): string[] {
@@ -51,7 +51,7 @@ export class ProfilePage implements OnInit {
     }
   }
 
-  async onEditSection(user: User, section: 'basic'|'genres'|'pix'|'addresses') {
+  async onEditSection(user: User, section: 'basic'|'pix'|'addresses') {
     const modal = await this.modalCtrl.create({
       component: EditProfileModalComponent,
       componentProps: { userToEdit: user, section }

@@ -15,7 +15,7 @@ import { CepService } from 'src/app/services/cep';
 })
 export class EditProfileModalComponent implements OnInit {
   @Input() userToEdit!: User;
-  @Input() section: 'basic' | 'genres' | 'pix' | 'addresses' = 'basic';
+  @Input() section: 'basic' | 'pix' | 'addresses' = 'basic';
   editForm: FormGroup;
   maxDescriptionLength = 250;
   imagePreview: string | ArrayBuffer | null = null; // Para a pré-visualização
@@ -26,11 +26,6 @@ export class EditProfileModalComponent implements OnInit {
   addresses: Address[] = [];
   newAddress: Address = { cep: '' };
 
-  genreOptions = [
-    'Romance', 'Ficção', 'Não-Ficção', 'Fantasia', 'Científico',
-    'Biografia', 'Infantil', 'Terror', 'Suspense', 'Poesia'
-  ];
-
   constructor(
     private modalCtrl: ModalController,
     private fb: FormBuilder,
@@ -39,7 +34,6 @@ export class EditProfileModalComponent implements OnInit {
     this.editForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.maxLength(this.maxDescriptionLength)],
-      favoriteGenres: [[]],
       avatarUrl: [null], // Campo para a imagem em Base64
   pixKey: [''], // Campo serializado (chaves separadas por ||)
   addresses: [[]]
@@ -51,7 +45,6 @@ export class EditProfileModalComponent implements OnInit {
       this.editForm.patchValue({
         name: this.userToEdit.name,
         description: this.userToEdit.description || '',
-        favoriteGenres: this.userToEdit.favoriteGenres || [],
         avatarUrl: this.userToEdit.avatarUrl || null,
         pixKey: this.userToEdit.pixKey || ''
       });
@@ -133,18 +126,7 @@ export class EditProfileModalComponent implements OnInit {
     });
   }
 
-  toggleGenre(genre: string) {
-    const currentGenres = this.editForm.get('favoriteGenres')?.value as string[] || [];
-    const updatedGenres = currentGenres.includes(genre)
-      ? currentGenres.filter(g => g !== genre)
-      : [...currentGenres, genre];
-    this.editForm.get('favoriteGenres')?.setValue(updatedGenres);
-  }
-
-  isGenreSelected(genre: string): boolean {
-    const currentGenres = this.editForm.get('favoriteGenres')?.value as string[] || [];
-    return currentGenres.includes(genre);
-  }
+  // removed genres controls
 
   onCancel() {
     this.modalCtrl.dismiss(null, 'cancel');
