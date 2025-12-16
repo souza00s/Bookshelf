@@ -60,17 +60,11 @@ export class BookService {
 
     // Marca pagamento confirmado e oculta o livro da listagem
     markPaid(bookId: number, data: { buyerName: string; amount: string; buyerId?: number }): Observable<void> {
-      return this.http.post<void>(`${this.apiUrl}/${bookId}/mark-paid`, data).pipe(
-        switchMap(() => this.authService.refreshCurrentUser()),
-        map(() => undefined)
-      );
+      return this.http.post<void>(`${this.apiUrl}/${bookId}/mark-paid`, data);
     }
 
-    // Confirma envio e dispara e-mail para o comprador (buyerId opcional para o backend resolver e-mail)
-    markShipped(
-      bookId: number,
-      data: { buyerEmail?: string; buyerName?: string; trackingCode?: string; buyerId?: number }
-    ): Observable<void> {
+    // Confirma envio e dispara e-mail para o comprador
+    markShipped(bookId: number, data: { buyerEmail: string; buyerName: string; trackingCode?: string }): Observable<void> {
       return this.http.post<void>(`${this.apiUrl}/${bookId}/mark-shipped`, data);
     }
 

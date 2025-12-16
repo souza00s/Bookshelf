@@ -28,11 +28,10 @@ export class NotificationsPage {
   if ((n as any)._shipped) return; // already processed
     // Backend: dispara e-mail para o comprador e registra envio
   if (typeof payload.bookId === 'number') {
-  const buyerId = payload.buyerId;
-  const buyerEmail = (payload as any).buyerEmail as string | undefined;
-  const buyerName = payload.buyerName || '';
-  const trackingCode = (payload as any).trackingCode as string | undefined;
-  this.books.markShipped(payload.bookId, { buyerId, buyerEmail, buyerName, trackingCode }).subscribe({
+      const buyerEmail = (payload as any).buyerEmail || '';
+      const buyerName = payload.buyerName || '';
+      const trackingCode = (payload as any).trackingCode || '';
+      this.books.markShipped(payload.bookId, { buyerEmail, buyerName, trackingCode }).subscribe({
         next: async () => {
           // Atualiza status do livro para SHIPPED
           this.auth.applyBookStatus(payload.bookId as number, 'SHIPPED');
