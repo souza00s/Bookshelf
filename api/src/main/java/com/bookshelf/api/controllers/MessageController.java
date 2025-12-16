@@ -34,7 +34,7 @@ public class MessageController {
 
     // --- NOVO MÉTODO ADICIONADO AQUI ---
     @DeleteMapping("/conversations/{conversationId}")
-    public ResponseEntity<Void> deleteConversation(@PathVariable Long conversationId) {
+    public ResponseEntity<Void> deleteConversation(@PathVariable long conversationId) {
         // Verifica se a conversa existe antes de tentar excluir
         if (!conversationRepository.existsById(conversationId)) {
             // Retorna 'Not Found' se a conversa não existir
@@ -48,15 +48,22 @@ public class MessageController {
 
     @PostMapping("/conversations/initiate")
     public ResponseEntity<?> initiateConversation(@RequestBody InitiateConversationRequest request) {
-        List<Long> participantIds = List.of(request.getRequesterId(), request.getBookOwnerId());
+        if (request == null || request.getRequesterId() == null || request.getBookOwnerId() == null || request.getBookId() == null) {
+            return ResponseEntity.badRequest().body("Parâmetros obrigatórios ausentes.");
+        }
+        long requesterId = request.getRequesterId();
+        long ownerId = request.getBookOwnerId();
+        long bookId = request.getBookId();
+
+        List<Long> participantIds = List.of(requesterId, ownerId);
         Optional<Conversation> existingConversation = conversationRepository
-            .findByBookAndParticipants(request.getBookId(), participantIds, participantIds.size());
+            .findByBookAndParticipants(bookId, participantIds, participantIds.size());
         if (existingConversation.isPresent()) {
             return ResponseEntity.ok(Map.of("conversationId", existingConversation.get().getId()));
         }
-        User requester = userRepository.findById(request.getRequesterId()).orElse(null);
-        User owner = userRepository.findById(request.getBookOwnerId()).orElse(null);
-        Book book = bookRepository.findById(request.getBookId()).orElse(null);
+        User requester = userRepository.findById(requesterId).orElse(null);
+        User owner = userRepository.findById(ownerId).orElse(null);
+        Book book = bookRepository.findById(bookId).orElse(null);
         if (requester == null || owner == null || book == null) {
             return ResponseEntity.badRequest().body("Utilizador ou livro não encontrado.");
         }
@@ -69,7 +76,7 @@ public class MessageController {
     }
 
     @GetMapping("/conversations")
-    public ResponseEntity<List<ConversationResponseDTO>> getUserConversations(@RequestParam Long userId) {
+    public ResponseEntity<List<ConversationResponseDTO>> getUserConversations(@RequestParam long userId) {
         List<Conversation> conversations = conversationRepository.findByParticipantId(userId);
         List<ConversationResponseDTO> responseDTOs = conversations.stream()
             .map(ConversationResponseDTO::new)

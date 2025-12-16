@@ -7,7 +7,6 @@
         <ion-input type="text" inputmode="numeric" maxlength="6" formControlName="code" placeholder="123456"></ion-input>
       </ion-item>
       <ion-note color="medium">Digite o código de 6 dígitos enviado para seu e-mail.</ion-note>
-
       <ion-button type="submit" expand="block" [disabled]="form.invalid || isLoading">
         <span *ngIf="!isLoading">Confirmar Código</span>
         <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>

@@ -4,6 +4,7 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { PasswordRecoveryService } from '../../services/password-recovery';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-password-recovery',
@@ -31,7 +32,7 @@ export class PasswordRecoveryPage {
     if (this.emailForm.invalid) return;
     this.isLoading = true;
     try {
-  await this.service.forgot(this.emailForm.value.email).toPromise();
+  await firstValueFrom(this.service.forgot(this.emailForm.value.email));
   await this.presentToast('Se o e-mail existir, enviamos um código.');
   const email = this.emailForm.value.email;
   this.router.navigate(['/code-verification'], { queryParams: { email } });

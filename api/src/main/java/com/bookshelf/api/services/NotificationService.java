@@ -26,7 +26,7 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public NotificationScrollDTO scroll(Long userId, Long cursor, int limit) {
+    public NotificationScrollDTO scroll(long userId, Long cursor, int limit) {
         if (limit <= 0 || limit > 100) limit = 20;
         userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         var list = notificationRepository.scroll(userId, cursor, limit + 1); // pega um a mais para saber se tem mais
@@ -42,7 +42,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public NotificationDTO createForUser(Long userId, String type, String message, Notification partial) {
+    public NotificationDTO createForUser(long userId, String type, String message, Notification partial) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         Notification n = new Notification();
         n.setUser(user);
@@ -78,19 +78,19 @@ public class NotificationService {
     }
 
     @Transactional(readOnly = true)
-    public List<NotificationDTO> listForUser(Long userId) {
+    public List<NotificationDTO> listForUser(long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         return notificationRepository.findByUserOrderByCreatedAtDesc(user).stream().map(NotificationDTO::from).collect(Collectors.toList());
     }
 
     @Transactional
-    public void markAllRead(Long userId) {
+    public void markAllRead(long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         notificationRepository.findByUserOrderByCreatedAtDesc(user).forEach(n -> { n.setReadFlag(true); });
     }
 
     @Transactional
-    public void delete(Long userId, Long notificationId) {
+    public void delete(long userId, long notificationId) {
         Notification n = notificationRepository.findById(notificationId).orElseThrow(() -> new RuntimeException("Not found"));
         if (!n.getUser().getId().equals(userId)) throw new RuntimeException("Forbidden");
         notificationRepository.delete(n);

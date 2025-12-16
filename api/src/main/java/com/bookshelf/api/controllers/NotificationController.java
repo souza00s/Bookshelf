@@ -21,19 +21,19 @@ public class NotificationController {
     }
 
     @GetMapping("/{userId}")
-    public List<NotificationDTO> list(@PathVariable Long userId) {
+    public List<NotificationDTO> list(@PathVariable long userId) {
         return notificationService.listForUser(userId);
     }
 
     @GetMapping("/{userId}/scroll")
-    public NotificationScrollDTO scroll(@PathVariable Long userId,
+    public NotificationScrollDTO scroll(@PathVariable long userId,
                                         @RequestParam(required = false) Long cursor,
                                         @RequestParam(defaultValue = "20") int limit) {
         return notificationService.scroll(userId, cursor, limit);
     }
 
     @PostMapping("/{userId}")
-    public NotificationDTO create(@PathVariable Long userId, @RequestBody NotificationDTO dto) {
+    public NotificationDTO create(@PathVariable long userId, @RequestBody NotificationDTO dto) {
         Notification partial = new Notification();
         partial.setBookId(dto.getBookId());
         partial.setBookTitle(dto.getBookTitle());
@@ -47,13 +47,13 @@ public class NotificationController {
     }
 
     @PostMapping("/{userId}/read-all")
-    public ResponseEntity<Void> markAllRead(@PathVariable Long userId) {
+    public ResponseEntity<Void> markAllRead(@PathVariable long userId) {
         notificationService.markAllRead(userId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{userId}/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long userId, @PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable long userId, @PathVariable long id) {
         notificationService.delete(userId, id);
         return ResponseEntity.noContent().build();
     }

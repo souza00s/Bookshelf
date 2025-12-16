@@ -3,15 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Book } from 'src/app/models/book.model';
 import { BookService } from 'src/app/services/book';
 import { ShippingOption, ShippingQuoteRequest, ShippingService } from 'src/app/services/shipping';
-import { Observable, of, switchMap, firstValueFrom } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { ModalController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 import { PaymentModalComponent } from 'src/app/components/payment-modal/payment-modal.component';
 import { NotificationService } from 'src/app/services/notification';
 import { AuthService } from 'src/app/services/auth';
 import { HttpClient } from '@angular/common/http';
 import { CepService } from 'src/app/services/cep';
 import { environment } from 'src/environments/environment';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-shipping-fee',
@@ -45,7 +46,8 @@ export class ShippingFeePage implements OnInit {
     private router: Router,
     private bookService: BookService,
     private shippingService: ShippingService,
-    private modalCtrl: ModalController,
+  private modalCtrl: ModalController,
+  private toast: ToastController,
     private notif: NotificationService,
   public auth: AuthService,
   private http: HttpClient,
@@ -170,7 +172,7 @@ export class ShippingFeePage implements OnInit {
     });
     await modal.present();
     const { role, data } = await modal.onWillDismiss();
-    if (role === 'confirm') {
+  if (role === 'confirm') {
       const me = this.auth.currentUserValue;
       const book = await firstValueFrom(this.book$);
       const amount = this.selected?.price || 0;
@@ -197,8 +199,25 @@ export class ShippingFeePage implements OnInit {
           { bookId: book.id, bookTitle: book.title, amount, buyerId: me?.id || undefined, buyerName: me?.name, sellerId: book.owner.id, sellerName: book.owner.name, reserved: true }
         );
       }
-      // navigate immediately to notifications page
-      this.router.navigate(['/notifications']);
+      // Chama backend para marcar pagamento e enviar email ao vendedor
+      if (book?.id) {
+        const buyerName = me?.name || '';
+        const amountLabel = `R$ ${amount.toFixed(2)}`;
+        this.bookService.markPaid(Number(book.id), { buyerName, amount: amountLabel, buyerId: me?.id || undefined }).subscribe({
+          next: async () => {
+            const t = await this.toast.create({ message: 'Pagamento confirmado. O vendedor foi avisado por e‑mail.', duration: 2500, color: 'success' });
+            await t.present();
+            this.router.navigate(['/notifications']);
+          },
+          error: async () => {
+            const t = await this.toast.create({ message: 'Pagamento confirmado, mas falhou notificar o vendedor.', duration: 2500, color: 'warning' });
+            await t.present();
+            this.router.navigate(['/notifications']);
+          }
+        });
+      } else {
+        this.router.navigate(['/notifications']);
+      }
     }
   }
 

@@ -58,45 +58,44 @@
             <div class="input-group address-section">
               <ion-label class="section-title">Endereço</ion-label>
               <div *ngIf="(authService.currentUserValue?.addresses?.length || 0) > 0; else noSavedAddress">
-                <ion-segment value="{{ useSavedAddress ? 'saved' : 'new' }}" (ionChange)="useSavedAddress = $event.detail.value === 'saved'">
+                <ion-segment [value]="useSavedAddress ? 'saved' : 'new'" (ionChange)="useSavedAddress = $event.detail.value === 'saved'">
                   <ion-segment-button value="saved">Usar endereço salvo</ion-segment-button>
                   <ion-segment-button value="new">Adicionar novo</ion-segment-button>
                 </ion-segment>
-    <div *ngIf="useSavedAddress" class="address-select">
-                  <ion-item class="custom-input">
-                    <ion-select [(ngModel)]="selectedAddressId" [ngModelOptions]="{standalone:true}" placeholder="Selecione um endereço salvo">
-                      <ion-select-option *ngFor="let a of authService.currentUserValue?.addresses" [value]="a.id">{{ a.label || (a.street + ' ' + a.number) || ('CEP ' + a.cep) }}</ion-select-option>
-                    </ion-select>
-                  </ion-item>
+                <div class="address-help" *ngIf="useSavedAddress">
+                  <ion-icon name="information-circle-outline"></ion-icon>
+                  <span>Usando o(s) endereço(s) salvo(s) no seu perfil.</span>
                 </div>
-  <div *ngIf="!useSavedAddress" class="address-form-grid">
-                  <ion-grid class="no-padding">
-                    <ion-row>
-                      <ion-col size="12" size-md="4"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.label" [ngModelOptions]="{standalone:true}" placeholder="Apelido"></ion-input></ion-item></ion-col>
-                      <ion-col size="12" size-md="4"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.cep" (ionInput)="onCepChange()" (ionBlur)="onCepChange()" [ngModelOptions]="{standalone:true}" placeholder="CEP *"></ion-input></ion-item></ion-col>
-                      <ion-col size="12" size-md="4"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.street" [ngModelOptions]="{standalone:true}" placeholder="Rua"></ion-input></ion-item></ion-col>
-                    </ion-row>
-                    <ion-row>
-                      <ion-col size="6" size-md="3"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.number" [ngModelOptions]="{standalone:true}" placeholder="Número"></ion-input></ion-item></ion-col>
-                      <ion-col size="6" size-md="3"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.complement" [ngModelOptions]="{standalone:true}" placeholder="Complemento"></ion-input></ion-item></ion-col>
-                      <ion-col size="12" size-md="6"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.neighborhood" [ngModelOptions]="{standalone:true}" placeholder="Bairro"></ion-input></ion-item></ion-col>
-                    </ion-row>
-                    <ion-row>
-                      <ion-col size="6" size-md="5"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.city" [ngModelOptions]="{standalone:true}" placeholder="Cidade"></ion-input></ion-item></ion-col>
-                      <ion-col size="3" size-md="2"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.state" [ngModelOptions]="{standalone:true}" placeholder="UF"></ion-input></ion-item></ion-col>
-                      <ion-col size="3" size-md="3"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.country" [ngModelOptions]="{standalone:true}" placeholder="País"></ion-input></ion-item></ion-col>
-                      <ion-col size="12" size-md="2" class="save-addr-toggle">
-                        <ion-item lines="none">
-                          <ion-checkbox [(ngModel)]="saveNewAddressToProfile" [ngModelOptions]="{standalone:true}" labelPlacement="end">Salvar endereço no perfil</ion-checkbox>
-                        </ion-item>
-                      </ion-col>
-                    </ion-row>
-                  </ion-grid>
-                  <div class="address-help">
-                    <ion-icon name="information-circle-outline"></ion-icon>
-                    <span>Use o CEP para preencher automaticamente Rua, Bairro, Cidade e UF. Você pode ajustar qualquer campo antes de salvar.</span>
+                <ng-container *ngIf="!useSavedAddress">
+                  <div class="address-form-grid">
+                    <ion-grid class="no-padding">
+                      <ion-row>
+                        <ion-col size="12" size-md="4"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.label" [ngModelOptions]="{standalone:true}" placeholder="Apelido"></ion-input></ion-item></ion-col>
+                        <ion-col size="12" size-md="4"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.cep" (ionInput)="onCepChange()" (ionBlur)="onCepChange()" [ngModelOptions]="{standalone:true}" placeholder="CEP *"></ion-input></ion-item></ion-col>
+                        <ion-col size="12" size-md="4"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.street" [ngModelOptions]="{standalone:true}" placeholder="Rua"></ion-input></ion-item></ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="6" size-md="3"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.number" [ngModelOptions]="{standalone:true}" placeholder="Número"></ion-input></ion-item></ion-col>
+                        <ion-col size="6" size-md="3"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.complement" [ngModelOptions]="{standalone:true}" placeholder="Complemento"></ion-input></ion-item></ion-col>
+                        <ion-col size="12" size-md="6"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.neighborhood" [ngModelOptions]="{standalone:true}" placeholder="Bairro"></ion-input></ion-item></ion-col>
+                      </ion-row>
+                      <ion-row>
+                        <ion-col size="6" size-md="5"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.city" [ngModelOptions]="{standalone:true}" placeholder="Cidade"></ion-input></ion-item></ion-col>
+                        <ion-col size="3" size-md="2"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.state" [ngModelOptions]="{standalone:true}" placeholder="UF"></ion-input></ion-item></ion-col>
+                        <ion-col size="3" size-md="3"><ion-item class="custom-input" lines="none"><ion-input [(ngModel)]="newAddress.country" [ngModelOptions]="{standalone:true}" placeholder="País"></ion-input></ion-item></ion-col>
+                        <ion-col size="12" size-md="2" class="save-addr-toggle">
+                          <ion-item lines="none">
+                            <ion-checkbox [(ngModel)]="saveNewAddressToProfile" [ngModelOptions]="{standalone:true}" labelPlacement="end">Salvar endereço no perfil</ion-checkbox>
+                          </ion-item>
+                        </ion-col>
+                      </ion-row>
+                    </ion-grid>
+                    <div class="address-help">
+                      <ion-icon name="information-circle-outline"></ion-icon>
+                      <span>Use o CEP para preencher automaticamente Rua, Bairro, Cidade e UF. Você pode ajustar qualquer campo antes de salvar.</span>
+                    </div>
                   </div>
-                </div>
+                </ng-container>
               </div>
               <ng-template #noSavedAddress>
                 <p class="placeholder">Nenhum endereço salvo. Adicione um novo para continuar.</p>
@@ -162,7 +161,7 @@
         <ion-spinner *ngIf="isSubmitting" name="crescent"></ion-spinner>
         <span *ngIf="!isSubmitting">Cadastrar Doação</span>
       </ion-button>
-  <ion-note color="medium" *ngIf="lacksPix" class="ion-text-center" style="display:block;margin-top:8px;text-align:center;">
+      <ion-note color="medium" *ngIf="lacksPix" class="ion-text-center" style="display:block;margin-top:8px;text-align:center;">
         É necessário cadastrar ao menos uma chave PIX no perfil para doar um livro.
       </ion-note>
     </form>

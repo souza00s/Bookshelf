@@ -24,8 +24,8 @@ public class CepController {
         // 1) ViaCEP
         try {
             var via = rest.getForEntity("https://viacep.com.br/ws/" + clean + "/json/", Map.class);
-            if (via.getStatusCode().is2xxSuccessful() && via.getBody() != null && !Boolean.TRUE.equals(((Map<?, ?>) via.getBody()).get("erro"))) {
-                Map<?, ?> body = (Map<?, ?>) via.getBody();
+            Map<?, ?> body = via.getBody();
+            if (via.getStatusCode().is2xxSuccessful() && body != null && !Boolean.TRUE.equals(body.get("erro"))) {
                 return ResponseEntity.ok(mapToDto(clean, (String) body.get("logradouro"), (String) body.get("bairro"), (String) body.get("localidade"), (String) body.get("uf")));
             }
         } catch (RestClientException ignored) { }
@@ -33,8 +33,8 @@ public class CepController {
         // 2) BrasilAPI
         try {
             var br = rest.getForEntity("https://brasilapi.com.br/api/cep/v1/" + clean, Map.class);
-            if (br.getStatusCode().is2xxSuccessful() && br.getBody() != null) {
-                Map<?, ?> body = (Map<?, ?>) br.getBody();
+            Map<?, ?> body = br.getBody();
+            if (br.getStatusCode().is2xxSuccessful() && body != null) {
                 return ResponseEntity.ok(mapToDto(clean,
                         (String) (body.containsKey("street") ? body.get("street") : body.get("logradouro")),
                         (String) (body.containsKey("neighborhood") ? body.get("neighborhood") : body.get("bairro")),

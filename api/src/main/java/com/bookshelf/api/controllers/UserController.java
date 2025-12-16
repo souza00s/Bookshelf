@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDetailDTO> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserDetailDTO> getUserById(@PathVariable long id) {
         return userRepository.findById(id)
                 .map(user -> ResponseEntity.ok(new UserDetailDTO(user)))
                 .orElse(ResponseEntity.notFound().build());
@@ -49,7 +49,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<UserDetailDTO> updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO dto) {
+    public ResponseEntity<UserDetailDTO> updateUser(@PathVariable long id, @RequestBody UpdateUserDTO dto) {
         return userRepository.findById(id)
             .map(user -> {
                 if (dto.getName() != null) user.setName(dto.getName());
@@ -185,7 +185,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable long id) {
         return userRepository.findById(id)
             .map(user -> {
                 // 1) Apagar mensagens que o usuário enviou (evita FK em messages.sender_id)
@@ -193,10 +193,13 @@ public class UserController {
 
                 // 2) Remover usuário das conversas (tabela de junção conversation_participants)
                 var conversations = conversationRepository.findAllByParticipant(id);
+                if (conversations == null) conversations = java.util.Collections.emptyList();
                 for (var conv : conversations) {
                     conv.getParticipants().removeIf(u -> u.getId().equals(id));
                 }
-                conversationRepository.saveAll(conversations);
+                if (!conversations.isEmpty()) {
+                    conversationRepository.saveAll(conversations);
+                }
 
                 // 3) Apagar conversas que ficaram sem participantes (opcional)
                 var empty = conversations.stream().filter(c -> c.getParticipants().isEmpty()).toList();
@@ -208,7 +211,9 @@ public class UserController {
                 //    Apenas garantir estado sincronizado
 
                 // 5) Finalmente, remover o usuário
-                userRepository.delete(user);
+                if (user != null) {
+                    userRepository.delete(user);
+                }
                 return ResponseEntity.noContent().build();
             })
             .orElse(ResponseEntity.notFound().build());

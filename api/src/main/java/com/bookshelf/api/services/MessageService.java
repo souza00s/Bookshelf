@@ -29,16 +29,21 @@ public class MessageService {
 
     @Transactional
     public MessageResponseDTO processAndSaveMessage(MessageDTO messageDto) {
-        // 1. Busca as entidades principais do banco de dados
-        Conversation conversation = conversationRepository.findById(messageDto.getConversationId())
+        if (messageDto == null || messageDto.getConversationId() == null || messageDto.getSenderId() == null) {
+            throw new IllegalArgumentException("conversationId e senderId são obrigatórios");
+        }
+    // 1. Busca as entidades principais do banco de dados
+    long conversationId = messageDto.getConversationId();
+    long senderId = messageDto.getSenderId();
+    Conversation conversation = conversationRepository.findById(conversationId)
             .orElseThrow(() -> new RuntimeException("ERRO CRÍTICO: Conversa não encontrada com id: " + messageDto.getConversationId()));
-        User sender = userRepository.findById(messageDto.getSenderId())
+    User sender = userRepository.findById(senderId)
             .orElseThrow(() -> new RuntimeException("ERRO CRÍTICO: Remetente não encontrado com id: " + messageDto.getSenderId()));
 
         // 2. Cria a nova entidade de mensagem
         Message newMessage = new Message();
         newMessage.setSender(sender);
-        newMessage.setContent(messageDto.getContent());
+    newMessage.setContent(messageDto.getContent());
         
         // 3. Gerencia a relação bidirecional (a parte mais importante)
         newMessage.setConversation(conversation);

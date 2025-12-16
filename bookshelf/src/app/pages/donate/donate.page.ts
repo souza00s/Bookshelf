@@ -6,6 +6,7 @@ import { Book } from 'src/app/models/book.model';
 import { AuthService } from 'src/app/services/auth';
 import { CepService } from 'src/app/services/cep';
 import { BookService } from 'src/app/services/book';
+import { firstValueFrom } from 'rxjs';
 
 // --- CORREÇÃO APLICADA AQUI NO VALIDADOR ---
 export const atLeastOneCheckboxCheckedValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -163,7 +164,7 @@ export class DonatePage implements OnInit {
       if (mustPersistAddress) {
         const updatedAddresses = [...(current?.addresses || []), { ...this.newAddress }];
         try {
-          await this.authService.updateUser({ addresses: updatedAddresses }).toPromise();
+          await firstValueFrom(this.authService.updateUser({ addresses: updatedAddresses }));
         } catch {
           this.presentToast('Falha ao salvar o novo endereço no perfil.');
           this.isSubmitting = false;

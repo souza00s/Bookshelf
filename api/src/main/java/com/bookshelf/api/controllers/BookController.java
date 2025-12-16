@@ -3,6 +3,7 @@ package com.bookshelf.api.controllers;
 import com.bookshelf.api.dtos.BookResponseDTO;
 import com.bookshelf.api.models.Book;
 import com.bookshelf.api.models.User;
+import com.bookshelf.api.models.BookStatus;
 import com.bookshelf.api.repositories.BookRepository;
 import com.bookshelf.api.repositories.UserRepository;
 import com.bookshelf.api.repositories.ConversationRepository;
@@ -14,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.bookshelf.api.services.EmailService;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +39,9 @@ public class BookController {
     @Autowired
     private PixKeyRepository pixKeyRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Getter
     @Setter
     public static class BookDTO {
@@ -49,6 +55,22 @@ public class BookController {
         private boolean deliveryShipping;
         private boolean available; // <-- NOME CORRIGIDO AQUI
         private Long ownerId;
+    }
+
+    // --- Payloads auxiliares ---
+    @Getter @Setter
+    public static class MarkPaidPayload {
+        private Long buyerId;
+        private String buyerName;
+        private String amount; // texto formatado (ex: R$ 35,90)
+    }
+
+    @Getter @Setter
+    public static class MarkShippedPayload {
+    private String buyerEmail;
+    private String buyerName;
+    private String trackingCode;
+    private Long buyerId; // opcional: servidor resolve email quando presente
     }
 
     @PostMapping
@@ -108,6 +130,78 @@ public class BookController {
         }
     }
 
+    // --- NOVO: marcar pagamento confirmado (chamado pela página shipping-fee após escolher PIX e confirmar) ---
+    @PostMapping("/{id}/mark-paid")
+    @Transactional
+    public ResponseEntity<?> markPaid(@PathVariable long id,
+                                      @RequestBody MarkPaidPayload payload,
+                                      @AuthenticationPrincipal User authUser) {
+    if (payload == null) {
+            return ResponseEntity.badRequest().body("Parâmetros inválidos");
+        }
+    Book book = bookRepository.findById(id).orElse(null);
+        if (book == null) {
+            return ResponseEntity.notFound().build();
+        }
+        // Apenas o comprador logado deve conseguir acionar; se não tiver auth, permite legado
+    // Oculta o livro da listagem e marca como inativo
+        book.setAvailable(false);
+    // Também aplica status para compatibilidade com novo campo enum
+    try { book.setStatus(BookStatus.RESERVED); } catch (Exception ignored) {}
+        bookRepository.save(book);
+
+        // Email para o vendedor
+        User owner = book.getOwner();
+        if (owner != null && owner.getEmail() != null && !owner.getEmail().isBlank()) {
+            emailService.sendOrderPaidToSeller(owner.getEmail(), owner.getName(), book.getTitle(), payload.getAmount(), payload.getBuyerName());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    // --- NOVO: confirmar envio (chamado na aba notifications pelo vendedor) ---
+    @PostMapping("/{id}/mark-shipped")
+    public ResponseEntity<?> markShipped(@PathVariable long id,
+                                         @RequestBody MarkShippedPayload payload,
+                                         @AuthenticationPrincipal User authUser) {
+    if (payload == null) {
+            return ResponseEntity.badRequest().body("Parâmetros inválidos");
+        }
+    Book book = bookRepository.findById(id).orElse(null);
+        if (book == null) {
+            return ResponseEntity.notFound().build();
+        }
+        // Email para o comprador: se não veio e-mail, resolve pelo buyerId
+        String toEmail = payload.getBuyerEmail();
+        String buyerName = payload.getBuyerName();
+        if ((toEmail == null || toEmail.isBlank()) && payload.getBuyerId() != null) {
+            Long buyerId = payload.getBuyerId();
+            var buyerOpt = userRepository.findById(buyerId.longValue());
+            if (buyerOpt.isPresent()) {
+                var buyer = buyerOpt.get();
+                toEmail = (buyer.getEmail() != null && !buyer.getEmail().isBlank()) ? buyer.getEmail() : toEmail;
+                if (buyerName == null || buyerName.isBlank()) buyerName = buyer.getName();
+            }
+        }
+        if (toEmail != null && !toEmail.isBlank()) {
+            emailService.sendOrderShippedToBuyer(toEmail, buyerName, book.getTitle(), payload.getTrackingCode());
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    // --- NOVO: reanunciar (reativa o anúncio, remove estado de comprado) ---
+    @PostMapping("/{id}/reanunciar")
+    @Transactional
+    public ResponseEntity<?> reannounce(@PathVariable long id, @AuthenticationPrincipal User authUser) {
+        Book book = bookRepository.findById(id).orElse(null);
+        if (book == null) {
+            return ResponseEntity.notFound().build();
+        }
+    book.setAvailable(true);
+    try { book.setStatus(BookStatus.AVAILABLE); } catch (Exception ignored) {}
+        bookRepository.save(book);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<BookResponseDTO>> getAllBooks() {
         List<Book> books = bookRepository.findAll();
@@ -130,14 +224,14 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookResponseDTO> getBookById(@PathVariable Long id) {
+    public ResponseEntity<BookResponseDTO> getBookById(@PathVariable long id) {
         return bookRepository.findById(id)
                 .map(book -> ResponseEntity.ok(new BookResponseDTO(book)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookResponseDTO> updateBook(@PathVariable Long id, @RequestBody Book bookDetails, @AuthenticationPrincipal User authUser) {
+    public ResponseEntity<BookResponseDTO> updateBook(@PathVariable long id, @RequestBody Book bookDetails, @AuthenticationPrincipal User authUser) {
         return bookRepository.findById(id)
                 .map(existingBook -> {
                     if (authUser == null || existingBook.getOwner() == null || !existingBook.getOwner().getId().equals(authUser.getId())) {
@@ -164,7 +258,7 @@ public class BookController {
     }
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<BookResponseDTO> patchStatus(@PathVariable Long id, @RequestParam("status") String status, @AuthenticationPrincipal User authUser) {
+    public ResponseEntity<BookResponseDTO> patchStatus(@PathVariable long id, @RequestParam("status") String status, @AuthenticationPrincipal User authUser) {
         var opt = bookRepository.findById(id);
         if (opt.isEmpty()) return ResponseEntity.notFound().build();
         var book = opt.get();
@@ -184,7 +278,7 @@ public class BookController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<?> deleteBook(@PathVariable Long id, @AuthenticationPrincipal User authUser) {
+    public ResponseEntity<?> deleteBook(@PathVariable long id, @AuthenticationPrincipal User authUser) {
         return bookRepository.findById(id)
             .map(book -> {
                 if (authUser == null || book.getOwner() == null || !book.getOwner().getId().equals(authUser.getId())) {

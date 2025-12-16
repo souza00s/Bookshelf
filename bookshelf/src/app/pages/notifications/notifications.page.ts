@@ -5,6 +5,8 @@ import { NotificationService, AppNotification } from 'src/app/services/notificat
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/services/auth';
+import { BookService } from 'src/app/services/book';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-notifications',
@@ -14,7 +16,7 @@ import { AuthService } from 'src/app/services/auth';
   styleUrls: ['./notifications.page.scss']
 })
 export class NotificationsPage {
-  constructor(public notif: NotificationService, private auth: AuthService, private http: HttpClient) {}
+  constructor(public notif: NotificationService, private auth: AuthService, private http: HttpClient, private books: BookService, private toast: ToastController) {}
 
   get userId(): number | null { return this.auth.getUserId(); }
 
@@ -24,19 +26,26 @@ export class NotificationsPage {
   if ((n as any)._sending) return; // prevent double click
   (n as any)._sending = true;
   if ((n as any)._shipped) return; // already processed
-    // comprador recebe: envio confirmado
-    this.notif.sendTo(
-      payload.buyerId,
-      `Envio confirmado pelo vendedor para o livro "${payload.bookTitle || ''}". Pacote a caminho!`,
-      'SHIPPING_CONFIRMED',
-      payload
-    );
-    // Atualiza status do livro para SHIPPED
-    if (payload.bookId) {
-      // Otimista: marca como SHIPPED localmente no perfil
-      this.auth.applyBookStatus(payload.bookId, 'SHIPPED');
-      this.http.patch(`${environment.apiUrl}/books/${payload.bookId}/status`, null, { params: { status: 'SHIPPED' } })
-        .subscribe({ next: () => this.auth.refreshCurrentUser().subscribe(), error: () => {} });
+    // Backend: dispara e-mail para o comprador e registra envio
+  if (typeof payload.bookId === 'number') {
+  const buyerId = payload.buyerId;
+  const buyerEmail = (payload as any).buyerEmail as string | undefined;
+  const buyerName = payload.buyerName || '';
+  const trackingCode = (payload as any).trackingCode as string | undefined;
+  this.books.markShipped(payload.bookId, { buyerId, buyerEmail, buyerName, trackingCode }).subscribe({
+        next: async () => {
+          // Atualiza status do livro para SHIPPED
+          this.auth.applyBookStatus(payload.bookId as number, 'SHIPPED');
+          this.http.patch(`${environment.apiUrl}/books/${payload.bookId}/status`, null, { params: { status: 'SHIPPED' } })
+            .subscribe({ next: () => this.auth.refreshCurrentUser().subscribe(), error: () => {} });
+          const t = await this.toast.create({ message: 'Envio confirmado. O comprador foi avisado por e‑mail.', duration: 2500, color: 'success' });
+          await t.present();
+        },
+        error: async () => {
+          const t = await this.toast.create({ message: 'Falha ao confirmar envio. Tente novamente.', duration: 2500, color: 'danger' });
+          await t.present();
+        }
+      });
     }
   (n as any)._shipped = true;
   // Marca apenas esta notificação como lida e remove após 1s para limpar a lista

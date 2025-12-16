@@ -13,7 +13,7 @@ import { PasswordRecoveryPage } from './password-recovery.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    PasswordRecoveryPageRoutingModule
+    PasswordRecoveryPageRoutingModule,
   ],
   declarations: [PasswordRecoveryPage]
 })

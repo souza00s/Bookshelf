@@ -12,6 +12,9 @@ public class AuthService {
     private UserRepository userRepository;
 
     public User register(User user) {
-        return userRepository.save(user);
+        if (user == null) {
+            throw new IllegalArgumentException("User must not be null");
+        }
+    return userRepository.save(user);
     }
 }
