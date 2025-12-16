@@ -2,6 +2,8 @@
 
 Uma plataforma de doações que conecta doadores a causas e projetos.
 
+<img width="1920" height="1079" alt="image" src="https://github.com/user-attachments/assets/4b01f526-44af-4658-a145-961ff63255e4" />
+
 ## 📋 Sumário
 - [Sobre o Projeto](#sobre-o-projeto)
 - [Tecnologias](#tecnologias)
@@ -185,4 +187,4 @@ A aplicação estará disponível em: `http://localhost:4200`
 
 ---
 
-Desenvolvido por [@souza00s](https://github.com/souza00s) & [@Bagreel](https://github.com/Bagreel)
+Desenvolvido com ❤ por [@souza00s](https://github.com/souza00s) & [@Bagreel](https://github.com/Bagreel)
