@@ -67,18 +67,18 @@ public class EmailService {
         }
     }
     
-        // Venda confirmada: e-mail para o VENDEDOR
+        // Doação confirmada: e-mail para o VENDEDOR
         @Async
         public void sendOrderPaidToSeller(String toEmail, String sellerName, String bookTitle, String amount, String buyerName) {
-            String subject = "Venda confirmada - Bookshelf";
-            String safeSeller = (sellerName != null && !sellerName.isBlank()) ? sellerName : "vendedor";
-            String safeBuyer = (buyerName != null && !buyerName.isBlank()) ? buyerName : "comprador";
+            String subject = "Doação confirmada - Bookshelf";
+            String safeSeller = (sellerName != null && !sellerName.isBlank()) ? sellerName : "doador";
+            String safeBuyer = (buyerName != null && !buyerName.isBlank()) ? buyerName : "destinatário";
             String safeTitle = (bookTitle != null && !bookTitle.isBlank()) ? bookTitle : "seu livro";
             String safeAmount = (amount != null && !amount.isBlank()) ? amount : "";
             String html = "<!doctype html><html><head><meta charset='utf-8'>" +
                     "<style>body{font-family:Arial,Helvetica,sans-serif;background:#f7f7f9;color:#222;padding:24px}.card{max-width:560px;margin:auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}.header{padding:20px 24px;border-bottom:1px solid #eef2f7}.brand{font-weight:700;color:#4f46e5}.content{padding:24px}.title{font-size:18px;margin:0 0 12px}.muted{color:#6b7280}.cta{display:inline-block;margin-top:16px;padding:10px 14px;background:#4f46e5;color:#fff;text-decoration:none;border-radius:8px}</style></head><body>" +
                     "<div class='card'><div class='header'><span class='brand'>Bookshelf</span></div><div class='content'>" +
-                    "<h1 class='title'>Venda confirmada</h1>" +
+                    "<h1 class='title'>Doação confirmada</h1>" +
                     "<p class='muted'>Olá, " + safeSeller + ". O pagamento de " + safeBuyer + " foi concluído.</p>" +
                     "<p>Livro: <b>" + safeTitle + "</b></p>" +
                     (safeAmount.isEmpty() ? "" : "<p>Valor: <b>" + safeAmount + "</b></p>") +
@@ -101,7 +101,7 @@ public class EmailService {
         @Async
         public void sendOrderShippedToBuyer(String toEmail, String buyerName, String bookTitle, String trackingCode) {
             String subject = "Seu pedido foi enviado - Bookshelf";
-            String safeBuyer = (buyerName != null && !buyerName.isBlank()) ? buyerName : "comprador";
+            String safeBuyer = (buyerName != null && !buyerName.isBlank()) ? buyerName : "destinatário";
             String safeTitle = (bookTitle != null && !bookTitle.isBlank()) ? bookTitle : "seu livro";
             String safeTracking = (trackingCode != null && !trackingCode.isBlank()) ? trackingCode : "";
             String html = "<!doctype html><html><head><meta charset='utf-8'>" +

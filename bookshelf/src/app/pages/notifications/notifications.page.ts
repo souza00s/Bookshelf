@@ -37,7 +37,7 @@ export class NotificationsPage {
           this.auth.applyBookStatus(payload.bookId as number, 'SHIPPED');
           this.http.patch(`${environment.apiUrl}/books/${payload.bookId}/status`, null, { params: { status: 'SHIPPED' } })
             .subscribe({ next: () => this.auth.refreshCurrentUser().subscribe(), error: () => {} });
-          const t = await this.toast.create({ message: 'Envio confirmado. O comprador foi avisado por e‑mail.', duration: 2500, color: 'success' });
+          const t = await this.toast.create({ message: 'Envio confirmado. O destinatário foi avisado por e‑mail.', duration: 2500, color: 'success' });
           await t.present();
         },
         error: async () => {

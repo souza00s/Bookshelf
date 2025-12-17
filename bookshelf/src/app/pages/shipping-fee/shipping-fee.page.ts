@@ -186,11 +186,11 @@ export class ShippingFeePage implements OnInit {
       }
       // Comprador recebe: pagamento confirmado (sem botão)
       this.notif.push(
-        `Pagamento confirmado para o livro "${book?.title}". Aguarde a confirmação de envio do vendedor.`,
+        `Pagamento confirmado para o livro "${book?.title}". Aguarde a confirmação de envio do doador.`,
         'PAYMENT_CONFIRMED',
         { bookId: book?.id, bookTitle: book?.title, amount, buyerId: me?.id || undefined, buyerName: me?.name, sellerId: book?.owner?.id, sellerName: book?.owner?.name, reserved: true }
       );
-      // Vendedor recebe: pagamento confirmado aguardando confirmação de envio (com botão na UI)
+      // doador recebe: pagamento confirmado aguardando confirmação de envio (com botão na UI)
       if (book?.owner?.id) {
         this.notif.sendTo(
           book.owner.id,
@@ -199,18 +199,18 @@ export class ShippingFeePage implements OnInit {
           { bookId: book.id, bookTitle: book.title, amount, buyerId: me?.id || undefined, buyerName: me?.name, sellerId: book.owner.id, sellerName: book.owner.name, reserved: true }
         );
       }
-      // Chama backend para marcar pagamento e enviar email ao vendedor
+      // Chama backend para marcar pagamento e enviar email ao doador
       if (book?.id) {
         const buyerName = me?.name || '';
         const amountLabel = `R$ ${amount.toFixed(2)}`;
         this.bookService.markPaid(Number(book.id), { buyerName, amount: amountLabel, buyerId: me?.id || undefined }).subscribe({
           next: async () => {
-            const t = await this.toast.create({ message: 'Pagamento confirmado. O vendedor foi avisado por e‑mail.', duration: 2500, color: 'success' });
+            const t = await this.toast.create({ message: 'Pagamento confirmado. O doador foi avisado por e‑mail.', duration: 2500, color: 'success' });
             await t.present();
             this.router.navigate(['/notifications']);
           },
           error: async () => {
-            const t = await this.toast.create({ message: 'Pagamento confirmado, mas falhou notificar o vendedor.', duration: 2500, color: 'warning' });
+            const t = await this.toast.create({ message: 'Pagamento confirmado, mas falhou notificar o doador.', duration: 2500, color: 'warning' });
             await t.present();
             this.router.navigate(['/notifications']);
           }

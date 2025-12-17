@@ -84,9 +84,9 @@
           </div>
         </div>
 
-        <!-- ARQUIVADOS / VENDIDOS -->
+        <!-- ARQUIVADOS / DOADOS -->
         <div class="sub-section archived-block" *ngIf="archivedBooks(user).length > 0">
-          <h3 class="sub-title">Arquivados | Vendidos</h3>
+          <h3 class="sub-title">Arquivados | Doados</h3>
           <div class="books-list archived">
             <div *ngFor="let book of archivedBooks(user)" class="book-item archived-item">
               <img [src]="book.coverUrl" [alt]="book.title" class="book-cover dim">

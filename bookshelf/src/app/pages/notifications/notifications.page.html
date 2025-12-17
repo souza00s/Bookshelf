@@ -13,9 +13,9 @@
           </div>
           <p *ngIf="n.payload?.bookTitle">Livro: {{ n.payload?.bookTitle }}</p>
           <p *ngIf="n.payload?.amount">Valor: R$ {{ n.payload?.amount | number:'1.2-2' }}</p>
-          <p *ngIf="n.payload?.buyerName">Comprador: {{ n.payload?.buyerName }}</p>
-          <p *ngIf="n.payload?.sellerName">Vendedor: {{ n.payload?.sellerName }}</p>
-          <!-- Botão só aparece para o vendedor na notificação de pagamento -->
+          <p *ngIf="n.payload?.buyerName">Solicitante: {{ n.payload?.buyerName }}</p>
+          <p *ngIf="n.payload?.sellerName">Doador: {{ n.payload?.sellerName }}</p>
+          <!-- Botão só aparece para o doador na notificação de pagamento -->
           <div *ngIf="n.type === 'PAYMENT_CONFIRMED' && !n.read && n.payload?.sellerId === userId && !isShippingDone(n)" class="actions">
             <ion-button size="small" color="success" fill="solid" [disabled]="isSending(n)" (click)="confirmShipping(n)">Confirmar envio</ion-button>
           </div>
