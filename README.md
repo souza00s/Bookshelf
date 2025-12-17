@@ -2,6 +2,8 @@
 
 Uma plataforma de doações que conecta doadores a causas e projetos.
 
+https://github.com/user-attachments/assets/9d4a1a0e-43c4-45a4-8e1c-6ab36c1b7c81
+
 ## 📋 Sumário
 - [Sobre o Projeto](#sobre-o-projeto)
 - [Tecnologias](#tecnologias)
