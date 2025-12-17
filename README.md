@@ -17,7 +17,7 @@ https://github.com/user-attachments/assets/9d4a1a0e-43c4-45a4-8e1c-6ab36c1b7c81
 
 ## 📖 Sobre o Projeto
 
-O **Bookshelf** é uma aplicação web/mobile para gerenciamento de doações, permitindo que usuários se cadastrem, façam login e realizem doações para causas diversas. O projeto é dividido em duas partes:
+O **Bookshelf** é uma aplicação web para gerenciamento de doações, permitindo que usuários se cadastrem, façam login e realizem doações para causas diversas. O projeto é dividido em duas partes:
 
 - **API (Backend)**: Serviço REST responsável pela autenticação (JWT), regras de negócio e persistência de dados (MySQL).
 - **Bookshelf (Frontend)**: Interface desenvolvida com Ionic/Angular para web e dispositivos móveis.
@@ -176,14 +176,6 @@ A aplicação estará disponível em: `http://localhost:4200`
 | `npm run test` | Executa testes unitários |
 | `npm run lint` | Executa o linter (ESLint) |
 | `npm run watch` | Build em watch mode |
-
-## 🤝 Contribuição
-
-1. Faça um fork do projeto
-2. Crie uma branch (`git checkout -b feature/minha-feature`)
-3. Commit (`git commit -m 'feat: minha feature'`)
-4. Push (`git push origin feature/minha-feature`)
-5. Abra um Pull Request
 
 ---
 
