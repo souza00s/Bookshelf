@@ -214,7 +214,7 @@ export class DonatePage implements OnInit {
         } else {
           this.presentToast('Ocorreu um erro no servidor ao doar o livro.');
         }
-        console.error(err);
+        //console.error(err);
       }
     });
   }

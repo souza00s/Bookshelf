@@ -23,14 +23,14 @@ export class SocketService {
 
     this.socket.on('connect', () => {
       this.connected = true;
-      console.log('Socket.IO: Conectado ao servidor!', this.socket.id);
+      //console.log('Socket.IO: Conectado ao servidor!', this.socket.id);
       // Reentra em todas as salas após (re)conectar
   this.rooms.forEach(room => this.socket.emit('joinRoom', room));
   this.bindNotificationChannel();
     });
     this.socket.on('disconnect', () => {
       this.connected = false;
-      console.log('Socket.IO: Desconectado do servidor.');
+      //console.log('Socket.IO: Desconectado do servidor.');
     });
     // Compatível com socket.io v2: eventos de reconexão
     this.socket.on('reconnect', () => {

@@ -117,7 +117,7 @@ export class MessagesPage implements OnInit, OnDestroy {
                 this.presentToast('Conversa excluída com sucesso.', 'success');
               },
               error: (err) => {
-                console.error('Erro ao excluir a conversa:', err);
+                //console.error('Erro ao excluir a conversa:', err);
                 this.presentToast('Não foi possível excluir a conversa.', 'danger');
               }
             });

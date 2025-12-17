@@ -59,7 +59,7 @@ export class MessageService {
         this.conversationsSubject.next(conversations);
       }),
       catchError(err => {
-        console.error('Erro ao buscar conversas:', err);
+        //console.error('Erro ao buscar conversas:', err);
         this.conversationsSubject.next([]);
         return throwError(() => new Error('Não foi possível carregar as conversas.'));
       })
