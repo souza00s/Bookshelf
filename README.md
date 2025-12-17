@@ -92,37 +92,47 @@ docker compose up -d mysql
 - O serviço fica acessível em `mysql:3306` (para containers) e em `localhost:3306` (na sua máquina).
 
 ### 3. Configure o Backend rapidamente
-Copie o arquivo de exemplo e ajuste se necessário:
-```bash
-cp api/src/main/resources/application.properties.example api/src/main/resources/application.properties
-```
 
-Use uma das opções no `application.properties`:
+**IMPORTANTE: Configuração de Variáveis de Ambiente (Segurança)**
+
+1. Copie o arquivo `.env.example` para `.env`:
+   ```bash
+   cd api
+   cp .env.example .env
+   ```
+
+2. Edite o arquivo `.env` com suas credenciais **REAIS**:
+   ```bash
+   # .env (NÃO VERSIONAR - já está no .gitignore)
+   DB_PASSWORD=sua_senha_mysql
+   MAIL_USERNAME=seu_email@gmail.com
+   MAIL_PASSWORD=sua_senha_app_gmail
+   JWT_SECRET=sua_chave_jwt_base64
+   SOCKET_HOST=localhost
+   SOCKET_PORT=8081
+   ```
+
+3. O arquivo `application.properties` já está configurado para ler essas variáveis automaticamente usando a sintaxe `${VARIAVEL:valor_padrao}`.
+
+**Opções de Banco de Dados:**
 
 - Via Docker Compose (serviço `mysql`):
   ```
   spring.datasource.url=jdbc:mysql://mysql:3306/bookshelf
-  spring.datasource.username=bookshelf
-  spring.datasource.password=bookshelf
   ```
 
-- MySQL local (sem Docker):
+- MySQL local (sem Docker) - padrão em `application.properties`:
   ```
-  spring.datasource.url=jdbc:mysql://localhost:3306/bookshelf?createDatabaseIfNotExist=true
-  spring.datasource.username=<SEU_USUARIO_MYSQL>
-  spring.datasource.password=<SUA_SENHA_MYSQL>
+  spring.datasource.url=jdbc:mysql://localhost:3306/bookshelf_db?serverTimezone=UTC
+  spring.datasource.username=root
+  spring.datasource.password=${DB_PASSWORD:}
   ```
-
-E mantenha:
-```
-spring.jpa.hibernate.ddl-auto=update
-jwt.secret=<UM_SEGREDO_LOCAL_ALEATORIO_AQUI>
-server.port=8080
-```
 
 Notas rápidas:
-- O Hibernate cria/atualiza tabelas (schema). A base `bookshelf` é criada automaticamente pelo Docker Compose; se usar MySQL local, a opção `?createDatabaseIfNotExist=true` evita criar manualmente.
-- Cada pessoa que for rodar localmente deve ter seu próprio `application.properties` (copiado do `.example`).
+- O Hibernate cria/atualiza tabelas (schema) automaticamente com `spring.jpa.hibernate.ddl-auto=update`
+- **NUNCA** commite o arquivo `.env` - ele contém suas credenciais privadas e já está no `.gitignore`
+- Compartilhe apenas o `.env.example` para que outros desenvolvedores saibam quais variáveis configurar
+- A biblioteca `spring-dotenv` carrega automaticamente as variáveis do `.env` ao iniciar a aplicação
 
 ### 4. Instale dependências
 
