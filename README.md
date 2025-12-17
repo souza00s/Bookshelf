@@ -187,4 +187,4 @@ A aplicação estará disponível em: `http://localhost:4200`
 
 ---
 
-Desenvolvido por [@souza00s](https://github.com/souza00s) & [@Bagreel](https://github.com/Bagreel)
+Desenvolvido com ❤ por [@souza00s](https://github.com/souza00s) & [@Bagreel](https://github.com/Bagreel)
