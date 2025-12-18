@@ -205,6 +205,16 @@ export class ShippingFeePage implements OnInit {
         const amountLabel = `R$ ${amount.toFixed(2)}`;
         this.bookService.markPaid(Number(book.id), { buyerName, amount: amountLabel, buyerId: me?.id || undefined }).subscribe({
           next: async () => {
+            // ✅ IMPORTANTE: Atualiza o status do livro localmente para RESERVED (inativo)
+            this.auth.applyBookStatus(book.id as number, 'RESERVED');
+            
+            // Atualiza também no backend para garantir sincronização
+            this.http.patch(`${environment.apiUrl}/books/${book.id}/status`, null, { params: { status: 'RESERVED' } })
+              .subscribe({ 
+                next: () => this.auth.refreshCurrentUser().subscribe(), 
+                error: () => {} 
+              });
+            
             const t = await this.toast.create({ message: 'Pagamento confirmado. O doador foi avisado por e‑mail.', duration: 2500, color: 'success' });
             await t.present();
             this.router.navigate(['/notifications']);

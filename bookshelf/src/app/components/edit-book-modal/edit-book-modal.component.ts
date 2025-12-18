@@ -88,7 +88,7 @@ export class EditBookModalComponent implements OnInit {
 
   onSave() {
     if (this.editForm.invalid) {
-      // Se quiser, pode adicionar um toast aqui para avisar o usuário
+      console.warn('⚠️ Formulário inválido, não salvando');
       return;
     }
 
@@ -99,6 +99,8 @@ export class EditBookModalComponent implements OnInit {
       coverUrl: formValue.coverUrl !== undefined ? formValue.coverUrl as string | null : this.bookToEdit.coverUrl
     } as Book;
     
+    console.log('📤 Modal enviando dados:', updatedData);
+    console.log('📋 Campos do formulário:', formValue);
     this.modalCtrl.dismiss(updatedData, 'confirm');
   }
 }

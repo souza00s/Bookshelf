@@ -87,8 +87,40 @@ export class ProfilePage implements OnInit {
     await modal.present();
 
     const { data, role } = await modal.onWillDismiss();
-    if (role === 'confirm') {
-      this.bookService.updateBook(data).subscribe();
+    if (role === 'confirm' && data) {
+      console.log('📝 Dados sendo enviados para atualização:', data);
+      console.log('📋 User atual antes do update:', this.authService.currentUserValue);
+      console.log('🔑 Token presente?', !!localStorage.getItem('bookshelf_token'));
+      
+      this.bookService.updateBook(data).subscribe({
+        next: (updatedBook) => {
+          console.log('✅ Livro atualizado com sucesso no backend:', updatedBook);
+          console.log('🔄 Iniciando refresh do usuário...');
+          
+          // Aguarda o refresh completar antes de continuar
+          this.authService.refreshCurrentUser().subscribe({
+            next: (refreshedUser) => {
+              console.log('✅ Usuário refreshed:', refreshedUser);
+              console.log('📚 Livros após refresh:', refreshedUser?.books);
+            },
+            error: (err) => {
+              console.error('❌ Erro ao fazer refresh:', err);
+            }
+          });
+        },
+        error: (err) => {
+          console.error('❌ Erro ao atualizar livro:', err);
+          console.error('❌ Status do erro:', err.status);
+          console.error('❌ Mensagem do erro:', err.message);
+          
+          if (err.status === 401) {
+            console.error('🔐 ERRO 401: Token expirado ou inválido!');
+            console.error('🔑 Token atual:', localStorage.getItem('bookshelf_token'));
+            alert('Sua sessão expirou. Por favor, faça login novamente.');
+            this.authService.logout();
+          }
+        }
+      });
     }
   }
 

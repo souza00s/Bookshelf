@@ -142,7 +142,8 @@ public class BookController {
             return ResponseEntity.notFound().build();
         }
         // Apenas o comprador logado deve conseguir acionar; se não tiver auth, permite legado
-        // Oculta o livro da listagem e marca como inativo
+        // ✅ IMPORTANTE: Marca o livro como RESERVADO imediatamente após pagamento
+        book.setStatus(com.bookshelf.api.models.BookStatus.RESERVED);
         book.setAvailable(false);
         bookRepository.save(book);
 
@@ -156,6 +157,7 @@ public class BookController {
 
     // --- NOVO: confirmar envio (chamado na aba notifications pelo vendedor) ---
     @PostMapping("/{id}/mark-shipped")
+    @Transactional
     public ResponseEntity<?> markShipped(@PathVariable Long id,
                                          @RequestBody MarkShippedPayload payload,
                                          @AuthenticationPrincipal User authUser) {
@@ -166,6 +168,12 @@ public class BookController {
         if (book == null) {
             return ResponseEntity.notFound().build();
         }
+        
+        // ✅ Atualiza o status do livro para SHIPPED
+        book.setStatus(com.bookshelf.api.models.BookStatus.SHIPPED);
+        book.setAvailable(false);
+        bookRepository.save(book);
+        
         // Email para o comprador
         if (payload.getBuyerEmail() != null && !payload.getBuyerEmail().isBlank()) {
             emailService.sendOrderShippedToBuyer(payload.getBuyerEmail(), payload.getBuyerName(), book.getTitle(), payload.getTrackingCode());

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { Book } from '../models/book.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -39,9 +39,14 @@ export class BookService {
   }
   
   updateBook(updatedBook: Book): Observable<Book> {
+    console.log('📤 BookService: Enviando PUT para:', `${this.apiUrl}/${updatedBook.id}`);
+    console.log('📤 BookService: Dados enviados:', updatedBook);
+    
     return this.http.put<Book>(`${this.apiUrl}/${updatedBook.id}`, updatedBook).pipe(
+      tap(book => console.log('📥 BookService: Resposta do backend:', book)),
       switchMap(book =>
         this.authService.refreshCurrentUser().pipe(
+          tap(user => console.log('🔄 BookService: Refresh completado, user:', user)),
           map(() => book)
         )
       )

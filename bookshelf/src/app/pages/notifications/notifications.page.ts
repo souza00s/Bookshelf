@@ -23,33 +23,44 @@ export class NotificationsPage {
   confirmShipping(n: AppNotification) {
     const payload = n.payload;
     if (!payload?.buyerId) return;
-  if ((n as any)._sending) return; // prevent double click
-  (n as any)._sending = true;
-  if ((n as any)._shipped) return; // already processed
-    // Backend: dispara e-mail para o comprador e registra envio
-  if (typeof payload.bookId === 'number') {
-      const buyerEmail = (payload as any).buyerEmail || '';
-      const buyerName = payload.buyerName || '';
-      const trackingCode = (payload as any).trackingCode || '';
-      this.books.markShipped(payload.bookId, { buyerEmail, buyerName, trackingCode }).subscribe({
-        next: async () => {
-          // Atualiza status do livro para SHIPPED
-          this.auth.applyBookStatus(payload.bookId as number, 'SHIPPED');
-          this.http.patch(`${environment.apiUrl}/books/${payload.bookId}/status`, null, { params: { status: 'SHIPPED' } })
-            .subscribe({ next: () => this.auth.refreshCurrentUser().subscribe(), error: () => {} });
-          const t = await this.toast.create({ message: 'Envio confirmado. O destinatário foi avisado por e‑mail.', duration: 2500, color: 'success' });
-          await t.present();
+    if ((n as any)._sending) return; // prevent double click
+    (n as any)._sending = true;
+    if ((n as any)._shipped) return; // already processed
+    
+    // Buscar dados do destinatário (buyerId) para pegar o email
+    if (typeof payload.bookId === 'number' && payload.buyerId) {
+      this.http.get<any>(`${environment.apiUrl}/users/${payload.buyerId}`).subscribe({
+        next: (buyer) => {
+          const buyerEmail = buyer.email || '';
+          const buyerName = payload.buyerName || buyer.name || '';
+          const trackingCode = (payload as any).trackingCode || '';
+          
+          // Backend: dispara e-mail para o destinatário e registra envio
+          this.books.markShipped(payload.bookId!, { buyerEmail, buyerName, trackingCode }).subscribe({
+            next: async () => {
+              // Atualiza status do livro para SHIPPED
+              this.auth.applyBookStatus(payload.bookId as number, 'SHIPPED');
+              this.http.patch(`${environment.apiUrl}/books/${payload.bookId}/status`, null, { params: { status: 'SHIPPED' } })
+                .subscribe({ next: () => this.auth.refreshCurrentUser().subscribe(), error: () => {} });
+              const t = await this.toast.create({ message: 'Envio confirmado. O destinatário foi avisado por e‑mail.', duration: 2500, color: 'success' });
+              await t.present();
+              
+              (n as any)._shipped = true;
+              (n as any).read = true;
+              setTimeout(() => this.notif.deleteNotification(n.id), 1000);
+            },
+            error: async () => {
+              const t = await this.toast.create({ message: 'Falha ao confirmar envio. Tente novamente.', duration: 2500, color: 'danger' });
+              await t.present();
+            }
+          });
         },
         error: async () => {
-          const t = await this.toast.create({ message: 'Falha ao confirmar envio. Tente novamente.', duration: 2500, color: 'danger' });
+          const t = await this.toast.create({ message: 'Não foi possível obter dados do destinatário.', duration: 2500, color: 'danger' });
           await t.present();
         }
       });
     }
-  (n as any)._shipped = true;
-  // Marca apenas esta notificação como lida e remove após 1s para limpar a lista
-  (n as any).read = true;
-  setTimeout(() => this.notif.deleteNotification(n.id), 1000);
   }
 
   onLoadMore(ev: any) {
