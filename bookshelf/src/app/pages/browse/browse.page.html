@@ -16,11 +16,6 @@
       </div>
       
       <div class="filters-container">
-        <div class="delivery-pill-group">
-          <button type="button" class="pill" [class.active]="filterForm.value.delivery==='localPickup'" (click)="setDelivery('localPickup')">Retirada Local</button>
-          <button type="button" class="pill" [class.active]="filterForm.value.delivery==='shipping'" (click)="setDelivery('shipping')">Envio</button>
-          <button type="button" class="pill" [class.active]="!filterForm.value.delivery" (click)="setDelivery('')">Todos</button>
-        </div>
         <div class="filter-group">
           <ion-label>Estado do Livro</ion-label>
           <ion-item class="filter-item">

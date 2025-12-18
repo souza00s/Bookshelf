@@ -67,6 +67,10 @@ export class BrowsePage implements OnInit {
       map(([books, filters]) => {
   let filtered = books.filter(b => (b.status ? b.status === 'AVAILABLE' : b.available));
 
+        // Log para debug
+        console.log('📦 Total livros disponíveis:', filtered.length);
+        console.log('🔍 Filtros aplicados:', filters);
+
         if (filters.searchTerm) {
           const term = filters.searchTerm.toLowerCase();
           filtered = filtered.filter(book =>
@@ -81,9 +85,21 @@ export class BrowsePage implements OnInit {
           filtered = filtered.filter(book => book.genre === filters.genre);
         }
         if (filters.delivery === 'localPickup') {
-          filtered = filtered.filter(book => book.deliveryLocalPickup); 
+          console.log('🔍 Filtrando por Retirada Local...');
+          const before = filtered.length;
+          filtered = filtered.filter(book => {
+            console.log(`  - "${book.title}": deliveryLocalPickup = ${book.deliveryLocalPickup}`);
+            return book.deliveryLocalPickup === true;
+          });
+          console.log(`✅ Resultados: ${before} → ${filtered.length}`);
         } else if (filters.delivery === 'shipping') {
-          filtered = filtered.filter(book => book.deliveryShipping); 
+          console.log('🔍 Filtrando por Envio...');
+          const before = filtered.length;
+          filtered = filtered.filter(book => {
+            console.log(`  - "${book.title}": deliveryShipping = ${book.deliveryShipping}`);
+            return book.deliveryShipping === true;
+          });
+          console.log(`✅ Resultados: ${before} → ${filtered.length}`);
         }
 
   return filtered;
@@ -103,6 +119,4 @@ export class BrowsePage implements OnInit {
       delivery: ''
     });
   }
-
-  setDelivery(val: string) { this.filterForm.patchValue({ delivery: val }); }
 }

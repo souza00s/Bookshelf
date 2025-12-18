@@ -7,6 +7,7 @@ import com.bookshelf.api.models.PixKey;
 import com.bookshelf.api.models.Address;
 import com.bookshelf.api.repositories.MessageRepository;
 import com.bookshelf.api.repositories.ConversationRepository;
+import com.bookshelf.api.repositories.PasswordResetTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,9 @@ public class UserController {
 
     @Autowired
     private ConversationRepository conversationRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
     // PixKeyRepository não é mais necessário; a sincronização acontece via coleção user.pixKeys
 
@@ -188,6 +192,9 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable long id) {
         return userRepository.findById(id)
             .map(user -> {
+                // 0) Apagar tokens de reset de senha do usuário
+                passwordResetTokenRepository.deleteByUser(user);
+                
                 // 1) Apagar mensagens que o usuário enviou (evita FK em messages.sender_id)
                 messageRepository.deleteBySender_Id(id);
 
