@@ -12,8 +12,6 @@ https://github.com/user-attachments/assets/9d4a1a0e-43c4-45a4-8e1c-6ab36c1b7c81
 - [Configuração e Instalação](#configuração-e-instalação)
 - [Como Executar](#como-executar)
 - [Scripts Disponíveis](#scripts-disponíveis)
-- [Contribuição](#contribuição)
-- [Licença](#licença)
 
 ## 📖 Sobre o Projeto
 
