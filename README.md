@@ -18,7 +18,7 @@ https://github.com/user-attachments/assets/9d4a1a0e-43c4-45a4-8e1c-6ab36c1b7c81
 **Bookshelf** is a web application for donation management, allowing users to register, log in, and make donations to various causes. The project is divided into two parts:
 
 - **API (Backend)**: REST service responsible for authentication (JWT), business logic, and data persistence (MySQL).
-- **Bookshelf (Frontend)**: Interface developed with Ionic/Angular for web and mobile devices.
+- **Bookshelf (Frontend)**: Interface developed with Ionic/Angular for web devices.
 
 ## 🚀 Technologies
 
